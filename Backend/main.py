@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routes import predict,lifestyle_cat
+from routes import predict, lifestyle_cat
 from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 app.add_middleware(
