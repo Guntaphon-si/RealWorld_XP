@@ -31,12 +31,12 @@
     <div class="form-content" [class.active]="activeTab === 'login'" *ngIf="activeTab === 'login'">
       <form class="auth-form" (ngSubmit)="onLogin()">
         <div class="form-group">
-          <label class="form-label">อีเมลหรือชื่อผู้ใช้</label>
+          <label class="form-label">ชื่อผู้ใช้</label>
           <div class="input-with-icon">
             <input 
               type="text" 
               class="form-input" 
-              placeholder="กรอกอีเมลหรือชื่อผู้ใช้"
+              placeholder="ชื่อผู้ใช้"
               [(ngModel)]="loginForm.username"
               name="username"
               required
@@ -67,19 +67,7 @@
           </div>
         </div>
 
-        <div class="form-extras">
-          <label class="checkbox-group">
-            <div class="checkbox">
-              <input 
-                type="checkbox" 
-                [(ngModel)]="loginForm.rememberMe"
-                name="rememberMe">
-              <span class="checkmark"></span>
-            </div>
-            <span>จดจำฉัน</span>
-          </label>
-          <a href="#" class="forgot-link">ลืมรหัสผ่าน?</a>
-        </div>
+        
 
         <button 
           type="submit" 
@@ -91,21 +79,6 @@
           <div class="success-checkmark" *ngIf="isLoading"></div>
         </button>
       </form>
-
-      <div class="social-login">
-        <div class="social-divider">
-          <span>หรือเข้าสู่ระบบด้วย</span>
-        </div>
-        <div class="social-buttons">
-          <button class="social-button" (click)="socialLogin('google')">🌐</button>
-          <button class="social-button" (click)="socialLogin('facebook')">📘</button>
-          <button class="social-button" (click)="socialLogin('line')">💚</button>
-        </div>
-      </div>
-
-      <div class="auth-switch">
-        ยังไม่มีบัญชี? <a href="#" (click)="switchTab('signup')">สมัครสมาชิกที่นี่</a>
-      </div>
     </div>
 
     <!-- Signup Form -->
@@ -124,22 +97,6 @@
               (focus)="onInputFocus($event)"
               (blur)="onInputBlur($event)">
             <span class="input-icon">👤</span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">อีเมล</label>
-          <div class="input-with-icon">
-            <input 
-              type="email" 
-              class="form-input" 
-              placeholder="กรอกอีเมล"
-              [(ngModel)]="signupForm.email"
-              name="email"
-              required
-              (focus)="onInputFocus($event)"
-              (blur)="onInputBlur($event)">
-            <span class="input-icon">✉️</span>
           </div>
         </div>
 
@@ -187,21 +144,6 @@
             </button>
           </div>
         </div>
-
-        <div class="form-extras">
-          <label class="checkbox-group">
-            <div class="checkbox">
-              <input 
-                type="checkbox" 
-                [(ngModel)]="signupForm.acceptTerms"
-                name="acceptTerms"
-                required>
-              <span class="checkmark"></span>
-            </div>
-            <span>ยอมรับ<a href="#" style="color: #64ffda; margin: 0 4px;">เงื่อนไขการใช้งาน</a>และ<a href="#" style="color: #64ffda; margin-left: 4px;">นโยบายความเป็นส่วนตัว</a></span>
-          </label>
-        </div>
-
         <button 
           type="submit" 
           class="submit-button"
@@ -212,21 +154,6 @@
           <div class="success-checkmark" *ngIf="isLoading"></div>
         </button>
       </form>
-
-      <div class="social-login">
-        <div class="social-divider">
-          <span>หรือสมัครด้วย</span>
-        </div>
-        <div class="social-buttons">
-          <button class="social-button" (click)="socialLogin('google')">🌐</button>
-          <button class="social-button" (click)="socialLogin('facebook')">📘</button>
-          <button class="social-button" (click)="socialLogin('line')">💚</button>
-        </div>
-      </div>
-
-      <div class="auth-switch">
-        มีบัญชีอยู่แล้ว? <a href="#" (click)="switchTab('login')">เข้าสู่ระบบที่นี่</a>
-      </div>
     </div>
   </div>
 </div>
