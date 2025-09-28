@@ -16,7 +16,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
     
-    # Hash the password
+    # passlib handles encoding, so we pass the raw string
     hashed_password = security.get_password_hash(user.password)
     
     # Create new user

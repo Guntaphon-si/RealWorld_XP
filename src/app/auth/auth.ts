@@ -1,11 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './auth.html',
   styleUrls: ['./auth.css']
 })
@@ -26,7 +30,7 @@ export class AuthComponent implements OnInit, OnDestroy {
   };
 
   signupForm = {
-    username: '',
+    username: '', // email field is not used by backend yet
     email: '',
     password: '',
     confirmPassword: '',
@@ -34,6 +38,11 @@ export class AuthComponent implements OnInit, OnDestroy {
   };
 
   private animationInterval: any;
+
+  constructor(
+    private router: Router,
+    private http: HttpClient
+  ) {}
 
   ngOnInit() {
     this.createParticles();
@@ -115,19 +124,23 @@ export class AuthComponent implements OnInit, OnDestroy {
     }
 
     this.isLoading = true;
-
-    // Simulate API call
-    setTimeout(() => {
-      this.isLoading = false;
-      alert('เข้าสู่ระบบสำเร็จ!\nกำลังไปยัง Dashboard...');
-      // Here you would redirect to the questionnaire or dashboard
-      // this.router.navigate(['/dashboard']);
-    }, 2000);
+    this.login(this.loginForm).subscribe({
+      next: (response) => {
+        console.log('Login successful', response);
+        this.isLoading = false;
+        alert('เข้าสู่ระบบสำเร็จ!');
+        this.router.navigate(['/home']); 
+      },
+      error: (err) => {
+        console.error('Login failed', err);
+        alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+        this.isLoading = false;
+      }
+    });
   }
 
   onSignup() {
-    if (!this.signupForm.username || !this.signupForm.email || 
-        !this.signupForm.password || !this.signupForm.confirmPassword) {
+    if (!this.signupForm.username || !this.signupForm.password || !this.signupForm.confirmPassword) {
       alert('กรุณากรอกข้อมูลให้ครบถ้วน');
       return;
     }
@@ -142,20 +155,23 @@ export class AuthComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (!this.signupForm.acceptTerms) {
-      alert('กรุณายอมรับเงื่อนไขการใช้งาน');
-      return;
-    }
 
     this.isLoading = true;
-
-    // Simulate API call
-    setTimeout(() => {
-      this.isLoading = false;
-      alert('สร้างบัญชีสำเร็จ!\nกำลังไปยังแบบสอบถาม...');
-      // Here you would redirect to the questionnaire
-      // this.router.navigate(['/questionnaire']);
-    }, 2500);
+    const { username, password } = this.signupForm;
+    this.signup({ username, password }).subscribe({
+      next: (response) => {
+        console.log('Signup successful', response);
+        this.isLoading = false;
+        alert('สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ');
+        this.switchTab('login'); // สลับไปหน้า login อัตโนมัติ
+      },
+      error: (err) => {
+        console.error('Signup failed', err);
+        // แสดงข้อความ error จาก backend ถ้ามี
+        alert(`สมัครสมาชิกไม่สำเร็จ: ${err.error.detail || 'เกิดข้อผิดพลาด'}`);
+        this.isLoading = false;
+      }
+    });
   }
 
   socialLogin(provider: string) {
@@ -193,5 +209,32 @@ export class AuthComponent implements OnInit, OnDestroy {
     if (parent) {
       parent.style.transform = 'translateY(0)';
     }
+  }
+
+  // --- Methods moved from AuthService ---
+  private apiUrl = 'http://localhost:8000/api/auth';
+
+  signup(user: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/signup`, user);
+  }
+
+  login(credentials: any): Observable<any> {
+    // FastAPI's OAuth2PasswordRequestForm expects form data
+    const body = new URLSearchParams();
+    body.set('username', credentials.username);
+    body.set('password', credentials.password);
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded'
+    });
+
+    return this.http.post(`${this.apiUrl}/token`, body.toString(), { headers }).pipe(
+      tap((response: any) => {
+        // Save the token to localStorage upon successful login
+        if (response.access_token) {
+          localStorage.setItem('access_token', response.access_token);
+        }
+      })
+    );
   }
 }
