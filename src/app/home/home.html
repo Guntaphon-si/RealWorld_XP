@@ -11,8 +11,17 @@
             <li><a href="#benefits">ประโยชน์</a></li>
         </ul>
         <div class="auth-buttons">
-            <a href="/auth" class="btn-login">เข้าสู่ระบบ</a>
+            <!-- แสดงเมื่อยังไม่ได้ล็อกอิน -->
+            <a *ngIf="!user" href="/auth" class="btn-login">เข้าสู่ระบบ</a>
+
+            <!-- แสดงเมื่อล็อกอินแล้ว -->
+            <div *ngIf="user" class="user-profile">
+                <span class="user-name">สวัสดี, {{ user?.username }}</span>
+                <a (click)="logout()" class="btn-logout">ออกจากระบบ</a>
+            </div>
         </div>
+        
+        
     </div>
 </nav>
 

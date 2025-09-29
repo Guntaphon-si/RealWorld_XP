@@ -157,3 +157,32 @@ footer { background: #0f0f23; padding: 60px 50px 30px; border-top: 1px solid rgb
         display: none; 
     }
 }
+
+/* --- User Profile in Navbar (After Login) --- */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* ระยะห่างระหว่างชื่อและปุ่ม */
+}
+
+.user-name {
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.btn-logout {
+    background: transparent;
+    color: #ff7b7b; /* สีแดงอ่อนสำหรับออกจากระบบ */
+    padding: 8px 20px;
+    border: 2px solid #ff7b7b;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-logout:hover {
+    background: rgba(255, 123, 123, 0.1);
+    box-shadow: 0 0 15px rgba(255, 123, 123, 0.2);
+}

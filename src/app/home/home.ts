@@ -1,15 +1,48 @@
-import { Component, AfterViewInit, HostListener, ElementRef, Renderer2, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, HostListener, ElementRef, Renderer2, OnDestroy, OnInit } from '@angular/core';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-home',
+  standalone: true,
+  imports: [NgIf],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
-export class HomeComponent implements AfterViewInit, OnDestroy {
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
+  
+  // ประกาศ property 'user' เพื่อให้ template และ method อื่นๆ ในคลาสสามารถเข้าถึงได้
+  // กำหนด type เป็น object ที่มี name หรือเป็น null และให้ค่าเริ่มต้นเป็น null (ยังไม่ล็อกอิน)
+  user: { username: string } | null = null; 
   
   private observer!: IntersectionObserver;
 
   constructor(private el: ElementRef, private renderer: Renderer2) {}
+
+  // สร้างฟังก์ชันสำหรับตรวจสอบสถานะล็อกอินโดยเฉพาะ
+  private checkLoginStatus(): void {
+    const userData = localStorage.getItem('currentUser');
+    if (userData) {
+      const parsedUser = JSON.parse(userData);
+      // ตรวจสอบให้แน่ใจว่ามี property 'username' อยู่ในข้อมูลที่ดึงมา
+      if (parsedUser && parsedUser.username) {
+        this.user = { username: parsedUser.username };
+      } else {
+        this.user = null; // ถ้าข้อมูลไม่สมบูรณ์ ให้ถือว่ายังไม่ได้ล็อกอิน
+      }
+    } else {
+      this.user = null;
+    }
+    console.log('HomeComponent: Login status checked.', this.user);
+  }
+
+  ngOnInit(): void {
+    // 1. ตรวจสอบสถานะเมื่อโหลดหน้าครั้งแรก
+    this.checkLoginStatus();
+
+    // 2. เพิ่ม Event Listener เพื่อ "ดักฟัง" การเปลี่ยนแปลงสถานะจากหน้าอื่น
+    // เราใช้ arrow function `() => this.checkLoginStatus()` เพื่อให้ `this` ยังคงหมายถึง HomeComponent
+    window.addEventListener('loginStateChange', this.handleLoginStateChange);
+  }
 
   ngAfterViewInit(): void {
     this.createParticles();
@@ -102,5 +135,20 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     if (this.observer) {
       this.observer.disconnect();
     }
+    // 3. ยกเลิก Event Listener เมื่อ Component ถูกทำลาย เพื่อป้องกัน Memory Leak
+    window.removeEventListener('loginStateChange', this.handleLoginStateChange);
+  }
+
+  // ใช้ Arrow function เพื่อให้ `this` ถูกต้องเสมอ
+  private handleLoginStateChange = (): void => {
+    this.checkLoginStatus();
+  };
+
+  // เพิ่มฟังก์ชัน logout()
+  logout(): void {
+    // ลบข้อมูลผู้ใช้ออกจาก localStorage
+    localStorage.removeItem('currentUser');
+    // "ประกาศ" บอกทั้งแอปว่าสถานะเปลี่ยนไปแล้ว
+    window.dispatchEvent(new CustomEvent('loginStateChange'));
   }
 }

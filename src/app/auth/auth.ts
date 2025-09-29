@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Component({
@@ -123,20 +123,36 @@ export class AuthComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.handleLoginAsync();
+  }
+
+  // สร้างฟังก์ชันใหม่เพื่อใช้ async/await
+  private async handleLoginAsync(): Promise<void> {
     this.isLoading = true;
-    this.login(this.loginForm).subscribe({
-      next: (response) => {
-        console.log('Login successful', response);
-        this.isLoading = false;
-        alert('เข้าสู่ระบบสำเร็จ!');
-        this.router.navigate(['/home']); 
-      },
-      error: (err) => {
-        console.error('Login failed', err);
-        alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
-        this.isLoading = false;
-      }
-    });
+    try {
+      // Step 1: รอจนกว่าจะได้ token กลับมา
+      const tokenResponse = await firstValueFrom(this.login(this.loginForm));
+      
+      // Step 2: รอจนกว่าจะได้ข้อมูลโปรไฟล์ผู้ใช้
+      const userProfile = await firstValueFrom(this.getUserProfile(tokenResponse.access_token));
+
+      // Step 3: เก็บข้อมูลผู้ใช้ (ที่มี name) ลงใน localStorage
+      localStorage.setItem('currentUser', JSON.stringify(userProfile));
+
+      // Step 4: "ประกาศ" บอกทั้งแอปว่าสถานะเปลี่ยนไปแล้ว
+      window.dispatchEvent(new CustomEvent('loginStateChange'));
+
+      console.log('Login and profile fetch successful', { token: tokenResponse, profile: userProfile });
+      alert('เข้าสู่ระบบสำเร็จ!');
+
+      // Step 5: เปลี่ยนหน้าหลังจากทุกอย่างเสร็จสิ้น
+      await this.router.navigate(['/home']);
+    } catch (err) {
+      console.error('Login failed', err);
+      alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   onSignup() {
@@ -236,5 +252,14 @@ export class AuthComponent implements OnInit, OnDestroy {
         }
       })
     );
+  }
+
+  // --- ฟังก์ชันใหม่สำหรับดึงข้อมูลผู้ใช้ ---
+  getUserProfile(token: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    // The user profile endpoint is at /api/auth/me
+    return this.http.get(`${this.apiUrl}/me`, { headers });
   }
 }
