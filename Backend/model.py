@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, Boolean,Text
 from sqlalchemy.orm import relationship
 from database import Base
 import enum
@@ -55,6 +55,7 @@ class Activity(Base):
     base_time = Column(Integer, nullable=True)
     base_xp = Column(Integer, nullable=True)
     activity_type = Column(Enum(ActivityType), nullable=True)
+    description = Column(Text, nullable=True)
 
     styles = relationship("ActivityStyle", back_populates="activity")
     activities_in_plan = relationship("ActivityInPlan", back_populates="activity")

@@ -1,0 +1,250 @@
+<div class="bg-animation" id="bgAnimation">
+  @for (p of particles(); track $index) {
+  <!-- 
+      3. สร้าง div.particle และใช้ Style Binding เพื่อผูกค่า CSS
+         Angular จะนำค่าจาก `p.left`, `p.animationDelay` ฯลฯ มาใส่ใน style ให้เอง
+    -->
+  <div
+    class="particle"
+    [style.left]="p.left"
+    [style.animation-delay]="p.animationDelay"
+    [style.animation-duration]="p.animationDuration"
+  ></div>
+  }
+</div>
+<nav class="top-nav">
+  <div class="nav-container">
+    <a href="#" class="logo">RealWorld XP</a>
+     <div class="progress-indicator" style="margin-top: 20px;">
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="(currentStep / totalSteps) * 100"></div>
+      </div>
+      <div class="progress-text">ขั้นตอน {{ currentStep }} จาก {{ totalSteps }}</div>
+    </div>
+    <a href="#" class="exit-button">ออก</a>
+  </div>
+</nav>
+<main class="main-content" #formContainer>
+  <div class="page-header">
+    <h1 class="page-title">แบบสอบถามข้อมูล</h1>
+  </div>
+
+  <form class="questionnaire-form" [formGroup]="socialForm" (ngSubmit)="onSubmit()">
+
+    @if (currentStep === 1) {
+      <div class="question-group">
+        <div class="question-text">1. กรุณาระบุอายุของคุณ (ปี)</div>
+        <input type="number" class="textarea-field" formControlName="age" placeholder="กรอกอายุของคุณ...">
+      </div>
+      <div class="question-group">
+        <div class="question-text">2. กรุณาระบุเพศของคุณ</div>
+        <div class="radio-group">
+            <div class="radio-option"><input type="radio" id="gender-male" formControlName="gender" value="ชาย"><label for="gender-male">ชาย</label></div>
+            <div class="radio-option"><input type="radio" id="gender-female" formControlName="gender" value="หญิง"><label for="gender-female">หญิง</label></div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-text">3. ในหนึ่งปี โดยเฉลี่ยแล้วคุณมีวันหยุดพักร้อนกี่วัน?</div>
+        <input type="number" class="textarea-field" formControlName="vacationDays" placeholder="กรอกจำนวนวัน...">
+      </div>
+      <div class="question-group">
+        <div class="question-text">4. โดยเฉลี่ย คุณใช้จ่ายเงินเพื่อความบันเทิงประมาณเดือนละเท่าไหร่?</div>
+        <input type="number" class="textarea-field" formControlName="monthlySpend" placeholder="กรอกจำนวนเงิน (บาท)...">
+      </div>
+      <div class="question-group">
+        <div class="question-text">5. ในเดือนที่ผ่านมา คุณซื้อสินค้าออนไลน์ประมาณกี่ครั้ง?</div>
+        <input type="number" class="textarea-field" formControlName="onlinePurchases" placeholder="กรอกจำนวนครั้ง...">
+      </div>
+      <div class="question-group">
+        <div class="question-text">6. ในปีที่ผ่านมา คุณได้บริจาคเพื่อการกุศลหรือสนับสนุนองค์กรต่างๆ กี่ครั้ง?</div>
+        <input type="number" class="textarea-field" formControlName="charityDonations" placeholder="กรอกจำนวนครั้ง...">
+      </div>
+      <div class="question-group">
+        <div class="question-text">7. โดยเฉลี่ยแล้ว ในหนึ่งสัปดาห์คุณออกกำลังกายกี่ชั่วโมง?</div>
+        <input type="number" class="textarea-field" formControlName="weeklyExercise" placeholder="กรอกจำนวนชั่วโมง...">
+      </div>
+    } @else if (currentStep === 2) {
+      <div class="question-group">
+        <div class="question-text">8. ปัจจุบันพอร์ตการลงทุนทั้งหมดของคุณมีมูลค่าประมาณเท่าไหร่?</div>
+        <input type="number" class="textarea-field" formControlName="portfolioValue" placeholder="กรอกมูลค่า (บาท)...">
+      </div>
+      <div class="question-group">
+        <div class="question-text">9. คุณใส่ใจต่อสุขภาพและการเลือกรับประทานอาหารที่มีประโยชน์มากน้อยเพียงใด?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" id="hc1" formControlName="healthConsciousness" value="1"><label for="hc1">1 - ไม่ค่อยใส่ใจ</label></div>
+          <div class="radio-option"><input type="radio" id="hc2" formControlName="healthConsciousness" value="2"><label for="hc2">2 - ใส่ใจบ้าง</label></div>
+          <div class="radio-option"><input type="radio" id="hc3" formControlName="healthConsciousness" value="3"><label for="hc3">3 - ปานกลาง</label></div>
+          <div class="radio-option"><input type="radio" id="hc4" formControlName="healthConsciousness" value="4"><label for="hc4">4 - ค่อนข้างใส่ใจ</label></div>
+          <div class="radio-option"><input type="radio" id="hc5" formControlName="healthConsciousness" value="5"><label for="hc5">5 - ใส่ใจสม่ำเสมอ</label></div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-text">10. ระดับการศึกษาสูงสุดของคุณคืออะไร?</div>
+        <div class="radio-group" style="flex-direction: column; align-items: flex-start;">
+          <div class="radio-option"><input type="radio" id="el1" formControlName="educationLevel" value="1"><label for="el1">ต่ำกว่าประถมศึกษา</label></div>
+          <div class="radio-option"><input type="radio" id="el2" formControlName="educationLevel" value="2"><label for="el2">ประถมศึกษา</label></div>
+          <div class="radio-option"><input type="radio" id="el3" formControlName="educationLevel" value="3"><label for="el3">มัธยมศึกษาตอนต้น</label></div>
+          <div class="radio-option"><input type="radio" id="el4" formControlName="educationLevel" value="4"><label for="el4">มัธยมศึกษาตอนปลาย หรือ ปวช.</label></div>
+          <div class="radio-option"><input type="radio" id="el5" formControlName="educationLevel" value="8"><label for="el5">อนุปริญญา หรือ ปวส.</label></div>
+          <div class="radio-option"><input type="radio" id="el6" formControlName="educationLevel" value="10"><label for="el6">ปริญญาตรี</label></div>
+          <div class="radio-option"><input type="radio" id="el7" formControlName="educationLevel" value="11"><label for="el7">ปริญญาโท</label></div>
+          <div class="radio-option"><input type="radio" id="el8" formControlName="educationLevel" value="15"><label for="el8">ปริญญาเอก</label></div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-text">11. ในวันปกติ คุณใช้เวลาอยู่หน้าจอ (นอกเหนือจากเวลาทำงาน) ประมาณวันละกี่ชั่วโมง?</div>
+        <input type="number" class="textarea-field" formControlName="dailyScreenTime" placeholder="กรอกจำนวนชั่วโมง...">
+      </div>
+      <div class="question-group">
+        <div class="question-text">12. คุณมีความตระหนักรู้และให้ความสำคัญกับปัญหาสิ่งแวดล้อมมากน้อยเพียงใด?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" id="ea1" formControlName="environmentalAwareness" value="1"><label for="ea1">1 - น้อยมาก</label></div>
+          <div class="radio-option"><input type="radio" id="ea2" formControlName="environmentalAwareness" value="2"><label for="ea2">2 - น้อย</label></div>
+          <div class="radio-option"><input type="radio" id="ea3" formControlName="environmentalAwareness" value="3"><label for="ea3">3 - ปานกลาง</label></div>
+          <div class="radio-option"><input type="radio" id="ea4" formControlName="environmentalAwareness" value="4"><label for="ea4">4 - มาก</label></div>
+          <div class="radio-option"><input type="radio" id="ea5" formControlName="environmentalAwareness" value="5"><label for="ea5">5 - มากที่สุด</label></div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-text">13. คุณคิดว่าตัวเองมีอิทธิพลบนโซเชียลมีเดียมากน้อยแค่ไหน?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" id="smi1" formControlName="socialMediaInfluence" value="1"><label for="smi1">1 - น้อยมาก</label></div>
+          <div class="radio-option"><input type="radio" id="smi2" formControlName="socialMediaInfluence" value="2"><label for="smi2">2 - มีเพื่อนบ้าง</label></div>
+          <div class="radio-option"><input type="radio" id="smi3" formControlName="socialMediaInfluence" value="3"><label for="smi3">3 - ปานกลาง</label></div>
+          <div class="radio-option"><input type="radio" id="smi4" formControlName="socialMediaInfluence" value="4"><label for="smi4">4 - ค่อนข้างมีอิทธิพล</label></div>
+          <div class="radio-option"><input type="radio" id="smi5" formControlName="socialMediaInfluence" value="5"><label for="smi5">5 - มีอิทธิพลสูง</label></div>
+        </div>
+      </div>
+    } @else if (currentStep === 3) {
+      <div class="question-group">
+        <div class="question-text">14. คุณสบายใจกับการยอมรับความผันผวนของตลาดเพื่อโอกาสรับผลตอบแทนสูงขึ้นเพียงใด?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" id="rt1" formControlName="riskTolerance" value="1"><label for="rt1">1 - ไม่สบายใจเลย</label></div>
+          <div class="radio-option"><input type="radio" id="rt2" formControlName="riskTolerance" value="2"><label for="rt2">2 - รับได้เล็กน้อย</label></div>
+          <div class="radio-option"><input type="radio" id="rt3" formControlName="riskTolerance" value="3"><label for="rt3">3 - รับได้ปานกลาง</label></div>
+          <div class="radio-option"><input type="radio" id="rt4" formControlName="riskTolerance" value="4"><label for="rt4">4 - รับได้ค่อนข้างสูง</label></div>
+          <div class="radio-option"><input type="radio" id="rt5" formControlName="riskTolerance" value="5"><label for="rt5">5 - สบายใจมาก</label></div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-text">15. ในรอบ 1 ปีที่ผ่านมา คุณได้เข้าร่วมการอบรมเพื่อพัฒนาทักษะวิชาชีพกี่ครั้ง?</div>
+        <input type="number" class="textarea-field" formControlName="professionalTrainings" placeholder="กรอกจำนวนครั้ง...">
+      </div>
+      <div class="question-group">
+        <div class="question-text">16. คุณคิดว่าตัวเองมีความคล่องแคล่วในการเรียนรู้และใช้เทคโนโลยีใหม่ๆ แค่ไหน?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" id="ts1" formControlName="techSavviness" value="1"><label for="ts1">1 - ไม่ถนัดเลย</label></div>
+          <div class="radio-option"><input type="radio" id="ts2" formControlName="techSavviness" value="2"><label for="ts2">2 - พอใช้</label></div>
+          <div class="radio-option"><input type="radio" id="ts3" formControlName="techSavviness" value="3"><label for="ts3">3 - ปานกลาง</label></div>
+          <div class="radio-option"><input type="radio" id="ts4" formControlName="techSavviness" value="4"><label for="ts4">4 - ค่อนข้างถนัด</label></div>
+          <div class="radio-option"><input type="radio" id="ts5" formControlName="techSavviness" value="5"><label for="ts5">5 - เชี่ยวชาญมาก</label></div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-text">17. โดยรวมแล้ว คุณรู้สึกพึงพอใจและมั่นคงกับสถานะทางการเงินของตัวเองแค่ไหน?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" id="fw1" formControlName="financialWellness" value="1"><label for="fw1">1 - กังวลมาก</label></div>
+          <div class="radio-option"><input type="radio" id="fw2" formControlName="financialWellness" value="2"><label for="fw2">2 - ค่อนข้างกังวล</label></div>
+          <div class="radio-option"><input type="radio" id="fw3" formControlName="financialWellness" value="3"><label for="fw3">3 - ปานกลาง</label></div>
+          <div class="radio-option"><input type="radio" id="fw4" formControlName="financialWellness" value="4"><label for="fw4">4 - ค่อนข้างมั่นคง</label></div>
+          <div class="radio-option"><input type="radio" id="fw5" formControlName="financialWellness" value="5"><label for="fw5">5 - มั่นคงมาก</label></div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-text">18. คุณรู้สึกว่าชีวิตของคุณมีความสมดุลเพียงใด?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" id="lb1" formControlName="lifestyleBalance" value="1"><label for="lb1">1 - ไม่สมดุลอย่างยิ่ง</label></div>
+          <div class="radio-option"><input type="radio" id="lb2" formControlName="lifestyleBalance" value="2"><label for="lb2">2 - ค่อนข้างไม่สมดุล</label></div>
+          <div class="radio-option"><input type="radio" id="lb3" formControlName="lifestyleBalance" value="3"><label for="lb3">3 - พอใช้</label></div>
+          <div class="radio-option"><input type="radio" id="lb4" formControlName="lifestyleBalance" value="4"><label for="lb4">4 - ค่อนข้างสมดุล</label></div>
+          <div class="radio-option"><input type="radio" id="lb5" formControlName="lifestyleBalance" value="5"><label for="lb5">5 - สมดุลอย่างยิ่ง</label></div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-text">19. คุณมีส่วนร่วมหรือติดตามข่าวสารในแวดวงบันเทิงมากน้อยเพียงใด?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" id="ee1" formControlName="entertainmentEngagement" value="1"><label for="ee1">1 - แทบไม่ติดตาม</label></div>
+          <div class="radio-option"><input type="radio" id="ee2" formControlName="entertainmentEngagement" value="2"><label for="ee2">2 - ติดตามบ้าง</label></div>
+          <div class="radio-option"><input type="radio" id="ee3" formControlName="entertainmentEngagement" value="3"><label for="ee3">3 - พอสมควร</label></div>
+          <div class="radio-option"><input type="radio" id="ee4" formControlName="entertainmentEngagement" value="4"><label for="ee4">4 - เป็นประจำ</label></div>
+          <div class="radio-option"><input type="radio" id="ee5" formControlName="entertainmentEngagement" value="5"><label for="ee5">5 - ติดตามใกล้ชิด</label></div>
+        </div>
+      </div>
+    } @else if (currentStep === 4) {
+      <div class="question-group">
+        <div class="question-text">20. คุณให้ความสำคัญกับการที่ธุรกิจต้องมีความรับผิดชอบต่อสังคมมากน้อยเพียงใด?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" id="sr1" formControlName="socialResponsibility" value="1"><label for="sr1">1 - ไม่ค่อยสำคัญ</label></div>
+          <div class="radio-option"><input type="radio" id="sr2" formControlName="socialResponsibility" value="2"><label for="sr2">2 - บ้าง</label></div>
+          <div class="radio-option"><input type="radio" id="sr3" formControlName="socialResponsibility" value="3"><label for="sr3">3 - ปานกลาง</label></div>
+          <div class="radio-option"><input type="radio" id="sr4" formControlName="socialResponsibility" value="4"><label for="sr4">4 - ค่อนข้างสำคัญ</label></div>
+          <div class="radio-option"><input type="radio" id="sr5" formControlName="socialResponsibility" value="5"><label for="sr5">5 - สำคัญยิ่ง</label></div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-text">21. คุณรู้สึกว่าสามารถแบ่งแยกระหว่าง "เวลาทำงาน" และ "เวลาส่วนตัว" ได้ดีแค่ไหน?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" id="wlb1" formControlName="workLifeBalance" value="1"><label for="wlb1">1 - ไม่ดีเลย</label></div>
+          <div class="radio-option"><input type="radio" id="wlb2" formControlName="workLifeBalance" value="2"><label for="wlb2">2 - ไม่ค่อยดี</label></div>
+          <div class="radio-option"><input type="radio" id="wlb3" formControlName="workLifeBalance" value="3"><label for="wlb3">3 - พอใช้</label></div>
+          <div class="radio-option"><input type="radio" id="wlb4" formControlName="workLifeBalance" value="4"><label for="wlb4">4 - ค่อนข้างดี</label></div>
+          <div class="radio-option"><input type="radio" id="wlb5" formControlName="workLifeBalance" value="5"><label for="wlb5">5 - ชัดเจน</label></div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-text">22. คุณมีความต้องการที่จะลงทุนในสินทรัพย์ที่มีความเสี่ยงสูงมากเพียงใด?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" id="ira1" formControlName="investmentRiskAppetite" value="1"><label for="ira1">1 - ไม่มีเลย</label></div>
+          <div class="radio-option"><input type="radio" id="ira2" formControlName="investmentRiskAppetite" value="2"><label for="ira2">2 - เล็กน้อย</label></div>
+          <div class="radio-option"><input type="radio" id="ira3" formControlName="investmentRiskAppetite" value="3"><label for="ira3">3 - ปานกลาง</label></div>
+          <div class="radio-option"><input type="radio" id="ira4" formControlName="investmentRiskAppetite" value="4"><label for="ira4">4 - ค่อนข้างสูง</label></div>
+          <div class="radio-option"><input type="radio" id="ira5" formControlName="investmentRiskAppetite" value="5"><label for="ira5">5 - สูงมาก</label></div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-text">23. ในชีวิตประจำวัน คุณลงมือปฏิบัติเพื่อสิ่งแวดล้อมบ่อยแค่ไหน?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" id="ecm1" formControlName="ecoConsciousness" value="1"><label for="ecm1">1 - แทบไม่เคย</label></div>
+          <div class="radio-option"><input type="radio" id="ecm2" formControlName="ecoConsciousness" value="2"><label for="ecm2">2 - บางครั้ง</label></div>
+          <div class="radio-option"><input type="radio" id="ecm3" formControlName="ecoConsciousness" value="3"><label for="ecm3">3 - เมื่อมีโอกาส</label></div>
+          <div class="radio-option"><input type="radio" id="ecm4" formControlName="ecoConsciousness" value="4"><label for="ecm4">4 - ค่อนข้างบ่อย</label></div>
+          <div class="radio-option"><input type="radio" id="ecm5" formControlName="ecoConsciousness" value="5"><label for="ecm5">5 - เป็นประจำ</label></div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-text">24. เมื่อเผชิญกับความเครียด คุณสามารถจัดการกับอารมณ์ได้ดีแค่ไหน?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" id="sms1" formControlName="stressManagement" value="1"><label for="sms1">1 - ไม่ดีเลย</label></div>
+          <div class="radio-option"><input type="radio" id="sms2" formControlName="stressManagement" value="2"><label for="sms2">2 - ไม่ค่อยดี</label></div>
+          <div class="radio-option"><input type="radio" id="sms3" formControlName="stressManagement" value="3"><label for="sms3">3 - พอใช้</label></div>
+          <div class="radio-option"><input type="radio" id="sms4" formControlName="stressManagement" value="4"><label for="sms4">4 - ค่อนข้างดี</label></div>
+          <div class="radio-option"><input type="radio" id="sms5" formControlName="stressManagement" value="5"><label for="sms5">5 - ดีเยี่ยม</label></div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-text">25. คุณคิดว่าทักษะการวางแผนและบริหารจัดการเวลาของคุณอยู่ในระดับใด?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" id="tms1" formControlName="timeManagement" value="1"><label for="tms1">1 - ควรปรับปรุง</label></div>
+          <div class="radio-option"><input type="radio" id="tms2" formControlName="timeManagement" value="2"><label for="tms2">2 - พอใช้</label></div>
+          <div class="radio-option"><input type="radio" id="tms3" formControlName="timeManagement" value="3"><label for="tms3">3 - ปานกลาง</label></div>
+          <div class="radio-option"><input type="radio" id="tms4" formControlName="timeManagement" value="4"><label for="tms4">4 - ดี</label></div>
+          <div class="radio-option"><input type="radio" id="tms5" formControlName="timeManagement" value="5"><label for="tms5">5 - ยอดเยี่ยม</label></div>
+        </div>
+      </div>
+    }
+  </form>
+
+  <div class="bottom-nav">
+    @if (currentStep > 1) {
+      <button type="button" class="btn-primary" (click)="prevStep()">ย้อนกลับ</button>
+    }
+    
+    @if (currentStep < totalSteps) {
+      <button type="button" class="btn-primary" (click)="nextStep()" [disabled]="!isCurrentStepValid()">ถัดไป</button>
+    }
+    
+    @if (currentStep === totalSteps) {
+      <button type="submit" class="btn-primary" (click)="onSubmit()" [disabled]="!socialForm.valid">ส่งข้อมูล</button>
+    }
+  </div>
+</main>
