@@ -37,6 +37,37 @@ export interface UserLifestyleResponse {
   user_id: number;
   lifestyle_id: number;
 }
+
+export interface UserUpdatePayload {
+  stress_level?: number;
+  xp?: number;
+  level?: number;
+  day_streak?: number;
+  is_success?: boolean;
+  first_success?: string; // ใน TypeScript, datetime มักจะถูกจัดการเป็น string (ISO format) หรือ Date
+  login_time?: string;
+}
+
+/**
+ * Interface สำหรับข้อมูล User ที่จะได้รับกลับมา
+ * ตรงกับ Pydantic: UserRespond
+ */
+export interface UserResponse {
+  id: number;
+  username: string;
+  stress_level?: number | null;
+  xp?: number | null;
+  level?: number | null;
+  day_streak?: number | null;
+  is_success?: boolean | null;
+  first_success?: string | null;
+  login_time?: string | null;
+}
+
+export interface DetailResponse {
+  detail: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -50,6 +81,8 @@ export class ApiService {
   private insertUserLifestyleUrl = 'http://127.0.0.1:8000/api/insertUserLifeStyle/';
   private getPlanId = "http://127.0.0.1:8000/api/userPlanId";
   private deleteAcitivityUrl = "http://127.0.0.1:8000/api/deleteActivityInPlan";
+  private updateUserUrl = 'http://127.0.0.1:8000/api/updateUser';
+  private deleteUserLifestyleUrl = 'http://127.0.0.1:8000/api/deleteUserLifeStyle';
 
   // 1. ทำการ "ฉีด" (Inject) HttpClient เข้ามาใช้งาน
   constructor(private http: HttpClient) { }
@@ -110,6 +143,29 @@ export class ApiService {
   deleteActivity(id:number) : Observable<any> {
     const params = new HttpParams().set('plan_id', id.toString());
   // ส่ง params เข้าไปใน options object ของ http.get
-    return this.http.get(this.deleteAcitivityUrl, { params: params });
+    return this.http.delete(this.deleteAcitivityUrl, { params: params });
+  }
+  updateUser(userId: number, updateData: UserUpdatePayload): Observable<UserResponse> {
+    
+    // 1. สร้าง HttpParams เพื่อส่ง user_id เป็น Query Parameter
+    //    ผลลัพธ์ที่ได้จะเป็น /updateUser?user_id=123
+    const params = new HttpParams().set('user_id', userId.toString());
+
+    // 2. เรียกใช้ http.patch<UserResponse>()
+    //    - Argument 1: URL
+    //    - Argument 2: Request Body (ข้อมูลที่จะอัปเดต)
+    //    - Argument 3: Options object ซึ่งเราใส่ params เข้าไป
+    return this.http.patch<UserResponse>(this.updateUserUrl, updateData, { params });
+  }
+  deleteUserLifestyles(userId: number): Observable<DetailResponse> {
+    
+    // 1. สร้าง HttpParams เพื่อส่ง user_id เป็น Query Parameter
+    //    ผลลัพธ์ที่ได้จะเป็น /deleteUserLifeStyle?user_id=123
+    const params = new HttpParams().set('user_id', userId.toString());
+
+    // 2. เรียกใช้ http.delete<DetailResponse>()
+    //    - Argument 1: URL
+    //    - Argument 2: Options object ซึ่งเราใส่ params เข้าไป
+    return this.http.delete<DetailResponse>(this.deleteUserLifestyleUrl, { params });
   }
 }

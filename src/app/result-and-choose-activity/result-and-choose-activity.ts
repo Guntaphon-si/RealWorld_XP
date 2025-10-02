@@ -4,7 +4,7 @@ import { DataService } from '../shared/data';
 import { ApiService } from '../services/api';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import { ActivityInPlanBulkItem,ActivityInPlanBulkCreatePayload ,UserLifestyleCreatePayload} from '../services/api';
+import { ActivityInPlanBulkItem,ActivityInPlanBulkCreatePayload ,UserLifestyleCreatePayload,UserUpdatePayload} from '../services/api';
 interface ParticleStyle {
   left: string;
   animationDelay: string;
@@ -254,6 +254,59 @@ export class ResultAndChooseActivity implements OnInit{
           // 4. หากเกิดข้อผิดพลาด, แสดง log และปิดสถานะ loading
           console.error('เกิดข้อผิดพลาดในการดู PlanId:', err);
           alert('ไม่สามารถดู PlanId');
+        }
+      });
+
+      const dataToUpdate: UserUpdatePayload = {
+        stress_level: 7 ,
+        xp: 0,
+        level:1,
+        day_streak:0
+      };
+
+      const userId = this.userId();
+
+      // 2. เรียกใช้ Service พร้อมส่งทั้ง ID และข้อมูล
+      this.apiService.updateUser(userId, dataToUpdate).subscribe({
+        next: (response) => {
+          // 3. เมื่อสำเร็จ, แสดงผลลัพธ์ และปิดสถานะ loading
+          console.log('อัปเดต User สำเร็จ:', response);
+          this.apiService.deleteUserLifestyles(userId).subscribe({
+              next: (response) => {
+                // 2. เมื่อสำเร็จ, แสดงข้อความ และปิดสถานะ loading
+                console.log('ลบข้อมูลสำเร็จ: UserLifeStyle', response.detail);
+                const payload: UserLifestyleCreatePayload = {
+                  user_id: this.userId(),
+                  lifestyle_ids: this.lifeStyleId()
+                };
+
+              // 2. เรียกใช้ Service
+                this.apiService.insertUserLifestyles(payload).subscribe({
+                    next: (response) => {
+                      // 3. เมื่อสำเร็จ, แสดงผลลัพธ์ และปิดสถานะ loading
+                      console.log('บันทึก Lifestyles สำเร็จ:', response);
+                    },
+                    error: (err) => {
+                      // 4. หากเกิดข้อผิดพลาด, แสดง log และปิดสถานะ loading
+                      console.error('เกิดข้อผิดพลาดในการบันทึก Lifestyles:', err);
+                      alert('ไม่สามารถบันทึกข้อมูลได้');
+                    }
+                  });
+              },
+              error: (err) => {
+                // 3. หากเกิดข้อผิดพลาด, แสดง log และปิดสถานะ loading
+                console.error('เกิดข้อผิดพลาดในการลบ: UserLifeStyle', err);
+              }
+            });
+        },
+        error: (err) => {
+          // 4. หากเกิดข้อผิดพลาด, แสดง log และปิดสถานะ loading
+          console.error('เกิดข้อผิดพลาดในการอัปเดต User:', err);
+          if (err.status === 404) {
+            alert('ไม่พบผู้ใช้งาน ID นี้');
+          } else {
+            alert('เกิดข้อผิดพลาดบางอย่าง');
+          }
         }
       });
     }

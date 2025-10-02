@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, Query,HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List  # Import List for type hinting
 from pydantic import BaseModel
 from model import Activity, ActivityStyle,User,ActivityPlan,ActivityInPlan,UserLifestyle
 from database import get_db
-from typing import List
+from datetime import datetime
+from typing import Optional,List
 router = APIRouter()
 
 @router.get("/activityByLifestyleId")
@@ -193,3 +193,60 @@ def delete_lifestyles_by_user_id(user_id: int, db: Session = Depends(get_db)):
 
     # 4. คืนค่าเป็นข้อความยืนยัน
     return {"detail": f"Successfully deleted {num_rows_deleted} lifestyles for user_id {user_id}"}
+
+
+class UserUpdate(BaseModel):
+    stress_level: Optional[int] = None
+    xp: Optional[int] = None
+    level: Optional[int] = None
+    day_streak: Optional[int] = None
+    is_success: Optional[bool] = None
+    first_success: Optional[datetime] = None
+    login_time: Optional[datetime] = None
+    # เราจะไม่ใส่ username/password ในนี้เพื่อความปลอดภัย
+
+# Schema สำหรับแสดงผลข้อมูล User (Response Body)
+class UserRespond(BaseModel):
+    id: int
+    username: str
+    stress_level: Optional[int] = None
+    xp: Optional[int] = None
+    level: Optional[int] = None
+    day_streak: Optional[int] = None
+    is_success: Optional[bool] = None
+    first_success: Optional[datetime] = None
+    login_time: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+@router.patch("/updateUser", response_model=UserRespond)
+def update_user_details(
+    user_id: int,
+    user_data: UserUpdate,
+    db: Session = Depends(get_db)
+):
+    """
+    อัปเดตข้อมูลของ User ตาม ID (เฉพาะ field ที่ส่งมา)
+    """
+    # 1. ค้นหา User เดิมในฐานข้อมูล
+    db_user = db.query(User).filter(User.id == user_id).first()
+
+    # 2. ตรวจสอบว่ามี User นี้อยู่จริงหรือไม่
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # 3. แปลงข้อมูลที่รับมาจาก Pydantic เป็น dict
+    #    ใช้ exclude_unset=True เพื่อเอาเฉพาะ field ที่ client ส่งมาจริงๆ
+    update_data = user_data.model_dump(exclude_unset=True)
+
+    # 4. วนลูปเพื่ออัปเดตค่าใน object `db_user`
+    for key, value in update_data.items():
+        setattr(db_user, key, value)
+
+    # 5. บันทึกการเปลี่ยนแปลงลงฐานข้อมูล
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+
+    # 6. คืนค่า User ที่อัปเดตแล้ว
+    return db_user
