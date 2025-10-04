@@ -1,1 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+:host {
+    display: block;
+    min-height: 100vh;
+}
+
+body { /* These styles will be applied via styles.css */
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #0f0f23 0%, #16213e 100%);
+    min-height: 100vh;
+    color: white;
+    overflow-x: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}

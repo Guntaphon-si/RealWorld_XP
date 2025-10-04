@@ -1,0 +1,91 @@
+<div class="particles" id="particles-js"></div>
+<nav class="top-nav">
+  <div class="logo">RealWorld XP</div>
+  <button class="dashboard-btn" title="กลับไป Dashboard" (click)="goToDashboard()">🏠</button>
+</nav>
+
+<main class="main-content">
+  @if (currentStep === 'loading') {
+  <div class="loading-spinner"></div>
+  } @if (currentStep === 'start' && activity) {
+  <div class="activity-card">
+    <div class="activity-header">
+      <h1 class="activity-title">{{ activity.name }}</h1>
+      <div class="tags-row">
+        <span class="tag">Indoor</span>
+        <span class="tag">{{ activity.base_time }} mins</span>
+      </div>
+    </div>
+    <div class="illustration-area">
+      <div class="activity-illustration">{{ activityIcon }}</div>
+    </div>
+    <p class="description">{{ activity.description }}</p>
+    <button class="btn-start" (click)="startActivity()">เริ่มกิจกรรม</button>
+  </div>
+  } @if (currentStep === 'timer' && activity) {
+  <div class="activity-card">
+    <div class="activity-header">
+      <h2 class="activity-title" style="font-size: 28px">{{ activity.name }}</h2>
+    </div>
+    <div class="timer-section">
+      <div class="timer-label">เวลาที่เหลือ</div>
+      <div class="timer-display" [class.paused]="isPaused">{{ formattedTime }}</div>
+    </div>
+    <div class="controls-row">
+      <button class="btn-pause" (click)="togglePause()">
+        {{ isPaused ? '▶ ทำต่อ' : '⏸ หยุดชั่วคราว' }}
+      </button>
+      <button class="btn-cancel" (click)="showCancelModal()">ยกเลิกกิจกรรม</button>
+    </div>
+  </div>
+  } @if (currentStep === 'complete' && user && activity) {
+  <div class="success-card">
+    <div class="confetti" id="confetti-js"></div>
+    <div class="success-icon">
+      <div class="success-circle"><div class="checkmark">✓</div></div>
+    </div>
+    <div class="success-header"><h1>เยี่ยมมาก! คุณทำกิจกรรมสำเร็จแล้ว</h1></div>
+    <div class="reward-card">
+      <div class="reward-content">
+        <div class="reward-item">
+          <div class="xp-value">+{{ activity.base_xp }} XP 🎉</div>
+          <div class="reward-label">ประสบการณ์</div>
+        </div>
+        @if (user.is_success) {
+        <div class="reward-item">
+          <div class="streak-value">🔥 {{ user.day_streak }}</div>
+          <div class="reward-label">วันติดต่อกัน</div>
+        </div>
+        }
+      </div>
+      <div class="xp-progress">
+        <div class="xp-progress-label">
+          <span>Level {{ user.level }}</span>
+          <span>{{ user.current_xp }} / {{ user.xp_for_next_level }} XP</span>
+        </div>
+        <div class="xp-progress-bar">
+          <div class="xp-progress-fill" [style.width.%]="xpProgressPercentage"></div>
+        </div>
+      </div>
+    </div>
+    <div class="action-buttons">
+      <button class="btn-secondary" (click)="goToDashboard()">กลับไป Dashboard</button>
+    </div>
+  </div>
+  }
+</main>
+
+@if (isModalVisible) {
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h2 class="modal-header">ยืนยันการยกเลิก</h2>
+    <p class="modal-subtext">
+      คุณแน่ใจหรือไม่ว่าต้องการยกเลิกกิจกรรมนี้? ความคืบหน้าของเวลาจะถูกรีเซ็ต
+    </p>
+    <div class="modal-buttons">
+      <button class="btn-keep-going" (click)="closeModal()">ทำต่อ</button>
+      <button class="btn-confirm-cancel" (click)="confirmCancel()">ยืนยันการยกเลิก</button>
+    </div>
+  </div>
+</div>
+}
