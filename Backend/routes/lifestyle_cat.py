@@ -8,3 +8,4 @@ router = APIRouter()
 @router.get("/lifestyle_cate")
 def read_lifestyle_cate(db: Session = Depends(get_db)):
     return db.query(LifestyleCate).all()
+

@@ -55,7 +55,7 @@ class Activity(Base):
     base_time = Column(Integer, nullable=True)
     base_xp = Column(Integer, nullable=True)
     activity_type = Column(Enum(ActivityType), nullable=True)
-    description = Column(Text, nullable=True)
+    description = Column(String(500), nullable=True)
 
     styles = relationship("ActivityStyle", back_populates="activity")
     activities_in_plan = relationship("ActivityInPlan", back_populates="activity")
