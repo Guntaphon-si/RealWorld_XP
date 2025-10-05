@@ -1,0 +1,10 @@
+<div class="activity-card" (click)="onCardClick()" [ngClass]="{ 'selected': activity().selected }">
+  <div class="select-checkbox"></div>
+  <!-- <span class="activity-icon">{{ activity().icon }}</span> -->
+  <h3 class="activity-title">{{ activity().name }}</h3>
+    <div class="activity-tags">
+      <span class="tag">{{ activity().activity_type }}</span>
+    <span class="tag duration">{{ activity().base_time }} min</span>
+  </div>
+  <p class="activity-desc">{{ activity().description }}</p>
+</div>
