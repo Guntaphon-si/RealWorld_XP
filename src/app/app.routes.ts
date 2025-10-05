@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { AssessMentQuestion } from './assess-ment-question/assess-ment-question';
 import { ResultAndChooseActivity } from './result-and-choose-activity/result-and-choose-activity';
-import { ButtonTest } from './button-test/button-test';
+import { ButtonTest } from './button-test1/button-test';
 export const routes: Routes = [
   {
     path: 'assessment', // เมื่อเข้ามาที่ path หลัก (เช่น yoursite.com)
