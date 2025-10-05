@@ -30,7 +30,6 @@ export const routes: Routes = [
     { path: 'auth', loadComponent: () => import('./auth/auth').then(m => m.AuthComponent) },
     { path: '**', redirectTo: '' }
     // หากไม่พบ Route ไหนเลย ให้กลับไปหน้า dashboard
-    { path: '**', redirectTo: '' }
 ];
 
 

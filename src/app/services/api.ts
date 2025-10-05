@@ -102,9 +102,9 @@ export class ApiService {
   }
 
   completeActivity(userId: number, activityId: number): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}/user/${userId}/complete`, { activity_id: activityId });
+    return this.http.post<User>(`${this.apiUrl}/user/${userId}/complete`, { activity_id: activityId });}
   // สมมติว่านี่คือ URL ของ API ที่คุณจะส่งข้อมูลไป
-  private apiUrl = 'http://127.0.0.1:8000/api/predictLifeStyle';
+  private apiUrlPredictLifeStyle = 'http://127.0.0.1:8000/api/predictLifeStyle';
   private GetActivity = 'http://127.0.0.1:8000/api/activityByLifestyleId';
   private GetUserLifeStyle = 'http://127.0.0.1:8000/api/userStressById';
   private createPlanUrl = 'http://127.0.0.1:8000/api/createActivityPlan/';
@@ -116,7 +116,6 @@ export class ApiService {
   private deleteUserLifestyleUrl = 'http://127.0.0.1:8000/api/deleteUserLifeStyle';
 
   // 1. ทำการ "ฉีด" (Inject) HttpClient เข้ามาใช้งาน
-  constructor(private http: HttpClient) { }
 
   // 2. สร้างฟังก์ชันสำหรับส่งข้อมูลฟอร์ม
   // formData: any คือ object ข้อมูลจากฟอร์ม
@@ -124,7 +123,7 @@ export class ApiService {
   submitAssessment(formData: any): Observable<any> {
     // 3. ใช้ http.post เพื่อส่งข้อมูล (Method POST)
     // Argument ตัวแรกคือ URL, ตัวที่สองคือข้อมูลที่จะส่ง (body)
-    return this.http.post<any>(this.apiUrl, formData);
+    return this.http.post<any>(this.apiUrlPredictLifeStyle, formData);
   }
   getActivitiesByLifestyles(lifestyleIds: number[]): Observable<any[]> {
     
