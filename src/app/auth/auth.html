@@ -1,0 +1,160 @@
+<!-- Animated Background -->
+<div class="bg-animation" id="bgAnimation"></div>
+
+<!-- Main Container -->
+<div class="auth-container">
+  <!-- Logo Section -->
+  <div class="logo-section">
+    <div class="logo">RealWorld XP</div>
+    <p class="logo-tagline">สร้างสมดุลชีวิตที่ดีขึ้น</p>
+  </div>
+
+  <!-- Auth Card -->
+  <div class="auth-card">
+    <!-- Tab Navigation -->
+    <div class="auth-tabs">
+      <button 
+        class="tab-button" 
+        [class.active]="activeTab === 'login'"
+        (click)="switchTab('login')">
+        เข้าสู่ระบบ
+      </button>
+      <button 
+        class="tab-button" 
+        [class.active]="activeTab === 'signup'"
+        (click)="switchTab('signup')">
+        สมัครสมาชิก
+      </button>
+    </div>
+
+    <!-- Login Form -->
+    <div class="form-content" [class.active]="activeTab === 'login'" *ngIf="activeTab === 'login'">
+      <form class="auth-form" (ngSubmit)="onLogin()">
+        <div class="form-group">
+          <label class="form-label">ชื่อผู้ใช้</label>
+          <div class="input-with-icon">
+            <input 
+              type="text" 
+              class="form-input" 
+              placeholder="ชื่อผู้ใช้"
+              [(ngModel)]="loginForm.username"
+              name="username"
+              required
+              (focus)="onInputFocus($event)"
+              (blur)="onInputBlur($event)">
+            <span class="input-icon">👤</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">รหัสผ่าน</label>
+          <div class="input-with-icon">
+            <input 
+              [type]="getPasswordType('loginPassword')"
+              class="form-input" 
+              placeholder="กรอกรหัสผ่าน"
+              [(ngModel)]="loginForm.password"
+              name="password"
+              required
+              (focus)="onInputFocus($event)"
+              (blur)="onInputBlur($event)">
+            <button 
+              type="button" 
+              class="password-toggle" 
+              (click)="togglePassword('loginPassword')">
+              {{ getPasswordToggleIcon('loginPassword') }}
+            </button>
+          </div>
+        </div>
+
+        
+
+        <button 
+          type="submit" 
+          class="submit-button"
+          [disabled]="isLoading"
+          [class.loading]="isLoading">
+          <span class="button-text" *ngIf="!isLoading">เข้าสู่ระบบ</span>
+          <span class="button-text" *ngIf="isLoading">กำลังเข้าสู่ระบบ...</span>
+          <div class="success-checkmark" *ngIf="isLoading"></div>
+        </button>
+      </form>
+    </div>
+
+    <!-- Signup Form -->
+    <div class="form-content" [class.active]="activeTab === 'signup'" *ngIf="activeTab === 'signup'">
+      <form class="auth-form" (ngSubmit)="onSignup()" #signupFormRef="ngForm">
+        <div class="form-group">
+          <label class="form-label">ชื่อผู้ใช้</label>
+          <div class="input-with-icon">
+            <input 
+              type="text" 
+              class="form-input" 
+              placeholder="กรอกชื่อผู้ใช้"
+              [(ngModel)]="signupForm.username"
+              name="username"
+              required
+              (focus)="onInputFocus($event)"
+              (blur)="onInputBlur($event)">
+            <span class="input-icon">👤</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">รหัสผ่าน</label>
+          <div class="input-with-icon">
+            <input 
+              [type]="getPasswordType('signupPassword')"
+              class="form-input" 
+              placeholder="สร้างรหัสผ่าน (อย่างน้อย 8 ตัวอักษร)"
+              [(ngModel)]="signupForm.password"
+              name="password"
+              required 
+              minlength="8"
+              (focus)="onInputFocus($event)"
+              (blur)="onInputBlur($event)">
+            <button 
+              type="button" 
+              class="password-toggle" 
+              (click)="togglePassword('signupPassword')">
+              {{ getPasswordToggleIcon('signupPassword') }}
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">ยืนยันรหัสผ่าน</label>
+          <div class="input-with-icon">
+            <input 
+              [type]="getPasswordType('confirmPassword')"
+              class="form-input" 
+              [class]="getConfirmPasswordClass()"
+              placeholder="ยืนยันรหัสผ่าน"
+              [(ngModel)]="signupForm.confirmPassword"
+              name="confirmPassword"
+              required 
+              minlength="8"
+              (focus)="onInputFocus($event)"
+              (blur)="onInputBlur($event)">
+            <button 
+              type="button" 
+              class="password-toggle" 
+              (click)="togglePassword('confirmPassword')">
+              {{ getPasswordToggleIcon('confirmPassword') }}
+            </button>
+          </div>
+        </div>
+        <button 
+          type="submit" 
+          class="submit-button"
+          [disabled]="isLoading"
+          [class.loading]="isLoading">
+          <span class="button-text" *ngIf="!isLoading">สร้างบัญชี</span>
+          <span class="button-text" *ngIf="isLoading">กำลังสร้างบัญชี...</span>
+          <div class="success-checkmark" *ngIf="isLoading"></div>
+        </button>
+      </form>
+
+    </div>
+  </div>
+</div>
