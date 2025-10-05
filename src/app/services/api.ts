@@ -61,8 +61,8 @@ export interface UserUpdatePayload {
   level?: number;
   day_streak?: number;
   is_success?: boolean;
-  first_success?: string; // ใน TypeScript, datetime มักจะถูกจัดการเป็น string (ISO format) หรือ Date
-  login_time?: string;
+  first_success?: string|null; // ใน TypeScript, datetime มักจะถูกจัดการเป็น string (ISO format) หรือ Date
+  login_time?: string|null;
 }
 
 /**

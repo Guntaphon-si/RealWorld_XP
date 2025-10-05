@@ -261,7 +261,10 @@ export class ResultAndChooseActivity implements OnInit{
         stress_level: 7 ,
         xp: 0,
         level:1,
-        day_streak:0
+        day_streak:0,
+        is_success: false,
+        first_success: null,
+        login_time: null
       };
 
       const userId = this.userId();
