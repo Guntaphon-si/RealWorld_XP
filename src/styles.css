@@ -1,1 +1,8 @@
-/* You can add global styles to this file, and also import other style files */
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100vw;
+  background: transparent; /* หรือ background ที่ต้องการ */
+  box-sizing: border-box;
+}
