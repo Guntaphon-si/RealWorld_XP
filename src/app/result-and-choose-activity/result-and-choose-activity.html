@@ -1,0 +1,149 @@
+@if (isLoading()) {
+  <div class="loader-container">
+  <div class="loader-bar"></div>
+  <div class="loader-bar"></div>
+  <div class="loader-bar"></div>
+  <p class="loader-text">กำลังค้นหากิจกรรมที่ใช่สำหรับคุณ...</p>
+</div>
+}@else {
+<div class="particles">
+  <!-- 
+    2. ใช้ @for วนลูปข้อมูลจาก signal `particles()`
+       track $index เพราะเราสร้างข้อมูลแค่ครั้งเดียวและลำดับไม่เปลี่ยน
+  -->
+  @for (p of particles(); track $index) {
+  <!-- 
+      3. สร้าง div.particle และใช้ Style Binding เพื่อผูกค่า CSS
+         Angular จะนำค่าจาก `p.left`, `p.animationDelay` ฯลฯ มาใส่ใน style ให้เอง
+    -->
+  <div
+    class="particle"
+    [style.left]="p.left"
+    [style.animation-delay]="p.animationDelay"
+    [style.animation-duration]="p.animationDuration"
+  ></div>
+  }
+</div>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+  <div class="logo">RealWorld XP</div>
+  <div class="nav-buttons">
+    <button class="nav-btn">ออก</button>
+  </div>
+</nav>
+<main class="main-content">
+  <div class="header">
+    <h1>กิจกรรมที่เหมาะสมกับคุณ</h1>
+    <p class="subtitle">
+      จากผลลัพธ์ที่คุณตอบ เราพบว่าคุณมีแนวโน้มเป็น
+      <span class="lifestyle-highlight">
+        {{lifestyleNamesString()}}
+      </span>
+      ลองเลือกกิจกรรมที่อยากทำต่อไปนี้
+    </p>
+  </div>
+
+  <!-- Lifestyle Badge -->
+  <div class="BadgeContainer">
+    @for(lifestyle of lifeStyleId(); track lifestyle){ 
+        @switch(lifestyle){ 
+            @case (0) {
+                <div class="lifestyle-badge">
+                <span class="lifestyle-icon">💼</span>
+                <h3 class="lifestyle-title">Finance/Professional</h3>
+                <p class="lifestyle-desc">กลุ่มคนที่สร้างความสำเร็จผ่านวินัยและการพัฒนาตนเองอย่างสม่ำเสมอ</p>
+                </div>
+            } 
+            @case (1) {
+                <div class="lifestyle-badge">
+                <span class="lifestyle-icon">💪</span>
+                <h3 class="lifestyle-title">Health & Fitness</h3>
+                <p class="lifestyle-desc">คนที่ผสมผสานการดูแลสุขภาพเข้าเป็นส่วนหนึ่งของการใช้ชีวิตประจำวัน</p>
+                </div>
+            } 
+            @case (2) {
+                <div class="lifestyle-badge">
+                <span class="lifestyle-icon">🌍</span>
+                <h3 class="lifestyle-title">Sustainability</h3>
+                <p class="lifestyle-desc">คนที่เชื่อว่าการดูแลโลกเริ่มต้นได้จากนิสัยเล็กๆ ในทุกวัน</p>
+                </div>
+            } 
+            @case (3) {
+                <div class="lifestyle-badge">
+                <span class="lifestyle-icon">🧑‍💻</span>
+                <h3 class="lifestyle-title">Tech/Digital</h3>
+                <p class="lifestyle-desc">ผู้ที่ชื่นชอบการฝึกสมองและแก้ปัญหาอย่างเป็นระบบผ่านกิจกรรมต่างๆ</p>
+                </div>
+            } 
+            @case (4) {
+                <div class="lifestyle-badge">
+                <span class="lifestyle-icon">✈️</span>
+                <h3 class="lifestyle-title">Travel & Adventure</h3>
+                <p class="lifestyle-desc">ผู้ที่มองหาการผจญภัยและความแปลกใหม่ในสิ่งรอบตัวเสมอ</p>
+                </div>
+            }
+            @default {
+                <div class="lifestyle-badge">
+                <span class="lifestyle-icon">🌱</span>
+                <h3 class="lifestyle-title">ERROR</h3>
+                <p class="lifestyle-desc">ไม่พบ LIFESTYLE ที่เหมาะกับคุณ</p>
+                </div>
+            } 
+        }
+    }
+  </div>
+
+  <section class="activities-section">
+    <div class="activities-grid">
+      <!-- 
+      @for...of: คือการวนลูปเหมือนเดิม
+      track act.id: คือส่วนที่สำคัญที่สุด! 
+                    เป็นการบอก Angular ว่าให้ติดตามแต่ละ item ด้วย `id` ที่ไม่ซ้ำกัน
+                    ซึ่งจะช่วยให้การอัปเดต DOM เร็วขึ้นมากเมื่อข้อมูลมีการเปลี่ยนแปลง
+    -->
+     <!-- 
+      !! เปลี่ยนจาก activities() เป็น visibleActivities() !!
+      ตอนนี้ @for จะวนลูปแค่ 6 รายการ (หรือน้อยกว่าในหน้าสุดท้าย) เท่านั้น
+    -->
+    @for (act of visibleActivities(); track act.id) {
+      <app-activity-card [activity]="act" (cardClicked)="toggleActivity(act)"></app-activity-card>
+    } @empty {
+      <p style="grid-column: 1 / -1; text-align: center; color: rgba(255, 255, 255, 0.7)">
+        ไม่พบกิจกรรมที่แนะนำในขณะนี้...
+      </p>
+    }
+    </div>
+    @if (totalPages() > 1) {
+    <div class="pagination-controls">
+      <!-- 
+        ใช้ [disabled] เพื่อปิดปุ่มเมื่อไม่สามารถกดได้ 
+        Angular จะจัดการเปิด/ปิดให้เองตามค่าของ signal
+      -->
+      <button class="pagination-btn" (click)="goToPreviousPage()" [disabled]="currentPage() === 1">
+        ‹ ก่อนหน้า
+      </button>
+
+      <span class="page-indicator">
+        หน้า {{ currentPage() }} / {{ totalPages() }}
+      </span>
+
+      <button class="pagination-btn" (click)="goToNextPage()" [disabled]="currentPage() === totalPages()">
+        ถัดไป ›
+      </button>
+    </div>
+  }
+  </section>
+
+  <div class="bottom-nav">
+    <div class="selected-count" [class.has-selection]="selectedCount() > 0">
+      เลือกแล้ว {{ selectedCount() }} กิจกรรม
+    </div>
+
+    <button class="cta-primary" [class.active]="selectedCount() > 0" (click)="confirmActivities()">
+      ยืนยันกิจกรรม
+    </button>
+  </div>
+</main>
+
+}

@@ -1,0 +1,128 @@
+.activity-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.4s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    animation: cardSlideIn 0.6s ease-out both;
+    width: 100%;
+    height: 100%;
+}
+
+.activity-card:nth-child(1) { animation-delay: 0.1s; }
+.activity-card:nth-child(2) { animation-delay: 0.2s; }
+.activity-card:nth-child(3) { animation-delay: 0.3s; }
+.activity-card:nth-child(4) { animation-delay: 0.4s; }
+.activity-card:nth-child(5) { animation-delay: 0.5s; }
+.activity-card:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes cardSlideIn {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.activity-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(100, 255, 218, 0.4);
+    box-shadow: 0 15px 40px rgba(100, 255, 218, 0.15);
+}
+
+.activity-card.selected {
+    border-color: #64ffda;
+    background: rgba(100, 255, 218, 0.1);
+    box-shadow: 0 0 30px rgba(100, 255, 218, 0.2);
+}
+
+.activity-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.activity-card:hover::before {
+    left: 100%;
+}
+
+.activity-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.activity-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: white;
+}
+
+.activity-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.tag {
+    background: rgba(100, 255, 218, 0.2);
+    color: #64ffda;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.tag.duration {
+    background: rgba(251, 146, 60, 0.2);
+    color: #FB923C;
+}
+
+.activity-desc {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.select-checkbox {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.activity-card.selected .select-checkbox {
+    background: #64ffda;
+    border-color: #64ffda;
+}
+
+.select-checkbox::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #0f0f23;
+    font-size: 14px;
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.activity-card.selected .select-checkbox::after {
+    opacity: 1;
+}
