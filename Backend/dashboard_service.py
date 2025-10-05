@@ -46,7 +46,7 @@ class DashboardService:
             ActivityInPlan.is_chose,
             ActivityPlan.id.label('plan_id'),
             ActivityPlan.user_id
-        ).join(
+        ).select_from(User).join(  # ADD .select_from(User) here
             ActivityPlan, User.id == ActivityPlan.user_id
         ).join(
             ActivityInPlan, ActivityPlan.id == ActivityInPlan.plan_id
@@ -55,7 +55,7 @@ class DashboardService:
         ).filter(
             and_(
                 User.id == user_id,
-                ActivityInPlan.is_chose == 1
+                ActivityInPlan.is_chose == True  # Changed from == 1
             )
         ).order_by(Activity.id).all()
         
@@ -67,7 +67,7 @@ class DashboardService:
                 'activity_name': row.activity_name,
                 'base_time': row.base_time,
                 'base_xp': row.base_xp,
-                'activity_type': row.activity_type,
+                'activity_type': row.activity_type.value if row.activity_type else None,  # Handle Enum
                 'description': row.description,
                 'success_count': row.success_count,
                 'is_chose': row.is_chose,

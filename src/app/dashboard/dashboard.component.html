@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RealWorld XP - แดชบอร์ดของฉัน</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="dashboard.component.css">
 </head>
 <body>
     <!-- Particles -->
@@ -34,7 +34,7 @@
                 <strong>{{ getStressLevelText() }} ({{ user?.stress_level }}/10)</strong>
             </p>
             <div class="progress-bar-container">
-                <div class="progress-bar-fill"></div>
+                <div class="progress-bar-fill" [style.width.%]="assessmentProgress"></div>
             </div>
             <p class="hero-description">
                 คุณมีความเครียดอยู่ในระดับปานกลาง และมักใช้โซเชียลมากกว่า 5 ชั่วโมงต่อวัน 
@@ -49,48 +49,17 @@
                 <a href="#" class="view-all-link">ดูทั้งหมด →</a>
             </div>
             <div class="activities-grid">
-                <div class="activity-card">
-                    <span class="activity-icon">🧘‍♀️</span>
-                    <h3 class="activity-title">โยคะ 20 นาที</h3>
+                <div class="activity-card" *ngFor="let activity of activities">
+                    <span class="activity-icon">{{ getActivityIcon(activity) }}</span>
+                    <h3 class="activity-title">{{ activity.activity_name }}</h3>
                     <div class="activity-tags">
-                        <span class="tag">Indoor</span>
-                        <span class="tag">Easy</span>
-                        <span class="tag">ลดความเครียด</span>
+                        <span class="tag" *ngFor="let tag of getActivityTags(activity)">
+                        {{ tag.label }}
+                        </span>
                     </div>
-                    <button class="btn-start-activity">เริ่มกิจกรรมนี้</button>
-                </div>
-
-                <div class="activity-card">
-                    <span class="activity-icon">🚶‍♂️</span>
-                    <h3 class="activity-title">เดินเล่น 15 นาที</h3>
-                    <div class="activity-tags">
-                        <span class="tag">Outdoor</span>
-                        <span class="tag">Easy</span>
-                        <span class="tag">สดชื่น</span>
-                    </div>
-                    <button class="btn-start-activity">เริ่มกิจกรรมนี้</button>
-                </div>
-
-                <div class="activity-card">
-                    <span class="activity-icon">🥗</span>
-                    <h3 class="activity-title">ทำอาหารสุขภาพ</h3>
-                    <div class="activity-tags">
-                        <span class="tag">Indoor</span>
-                        <span class="tag">Medium</span>
-                        <span class="tag">สร้างสรรค์</span>
-                    </div>
-                    <button class="btn-start-activity">เริ่มกิจกรรมนี้</button>
-                </div>
-
-                <div class="activity-card">
-                    <span class="activity-icon">📚</span>
-                    <h3 class="activity-title">อ่านหนังสือ 30 นาที</h3>
-                    <div class="activity-tags">
-                        <span class="tag">Indoor</span>
-                        <span class="tag">Easy</span>
-                        <span class="tag">พัฒนาตัวเอง</span>
-                    </div>
-                    <button class="btn-start-activity">เริ่มกิจกรรมนี้</button>
+                    <button class="btn-start-activity" (click)="startActivity(activity)">
+                        เริ่มกิจกรรมนี้
+                    </button>
                 </div>
             </div>
         </section>
@@ -103,7 +72,7 @@
             <div class="progress-section">
                 <div class="progress-card">
                     <div class="progress-icon">⭐</div>
-                    <div class="progress-value">Level 3</div>
+                    <div class="progress-value">Level {{ userLevel }}</div>
                     <div class="progress-label">ระดับของคุณ</div>
                     <div class="level-progress-container">
                         <div class="level-info">
@@ -118,7 +87,7 @@
 
                 <div class="progress-card">
                     <div class="progress-icon">🔥</div>
-                    <div class="progress-value">5 วัน</div>
+                    <div class="progress-value">{{ dayStreak }} วัน</div>
                     <div class="progress-label">ทำกิจกรรมติดต่อกัน</div>
                 </div>
 

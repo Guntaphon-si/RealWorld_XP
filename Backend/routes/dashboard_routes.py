@@ -5,7 +5,6 @@ from dashboard_service import DashboardService
 from typing import Dict, List
 
 router = APIRouter(
-    prefix="/api/dashboard",
     tags=["dashboard"]
 )
 
