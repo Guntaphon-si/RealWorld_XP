@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routes import start_activity,lifestyle_cat,rf_predict,auth,activity,predict,
+from routes import start_activity,lifestyle_cat,rf_predict,auth,activity,predict
 from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 app.add_middleware(

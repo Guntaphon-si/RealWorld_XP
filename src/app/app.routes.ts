@@ -11,7 +11,7 @@ export const routes: Routes = [
         component: ActivityFlowComponent
     },
     {
-        path : 'test',
+        path : 'test1',
         component: ButtonTestComponent
     },
     {
@@ -23,7 +23,7 @@ export const routes: Routes = [
       component:ResultAndChooseActivity 
     },
     {
-      path:'',
+      path:'test2',
       component:ButtonTest 
     },
     { path: '', loadComponent: () => import('./home/home').then(m => m.HomeComponent) },

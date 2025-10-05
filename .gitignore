@@ -5,7 +5,9 @@
 # Python backend
 Backend/venv/
 Backend/__pycache__/
+Backend/routes/__pycache__/
 Backend/.env*
+Backend/stressLevel_rf.pkl
 
 # Node.js frontend
 /node_modules/
@@ -15,3 +17,5 @@ Backend/.env*
 # OS generated files
 .DS_Store
 Thumbs.db
+
+package-lock.json
