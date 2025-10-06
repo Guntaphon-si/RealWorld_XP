@@ -7,6 +7,7 @@ import { ButtonTest } from './button-test1/button-test';
 import { AuthComponent } from './auth/auth';
 import { HomeComponent } from './home/home';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { AllActivitiesComponent } from './all-activity/all-activities.compenent';
 
 export const routes: Routes = [
     {
@@ -32,6 +33,10 @@ export const routes: Routes = [
     {
       path: 'dashboard',
       component: DashboardComponent
+    },
+    {
+      path: 'all-activities',
+      component: AllActivitiesComponent
     },
     { path: '', loadComponent: () => import('./home/home').then(m => m.HomeComponent) },
     { path: 'auth', loadComponent: () => import('./auth/auth').then(m => m.AuthComponent) },

@@ -1,0 +1,88 @@
+<!-- Particles -->
+<div class="particles" id="particles"></div>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+  <div class="logo">RealWorld XP</div>
+  <div class="page-title">เลือกกิจกรรมที่คุณอยากทำ</div>
+  <button class="btn-back" (click)="goToDashboard()">กลับไป Dashboard</button>
+</nav>
+
+<!-- Main Content -->
+<main class="main-content">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loader"></div>
+    <p>กำลังโหลดกิจกรรม...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage && !isLoading" class="error-container">
+    <p class="error-text">{{ errorMessage }}</p>
+    <button class="btn-retry" (click)="loadActivities()">ลองใหม่อีกครั้ง</button>
+  </div>
+
+  <!-- Content (when loaded) -->
+  <div *ngIf="!isLoading && !errorMessage">
+    <!-- Instruction Card -->
+    <div class="instruction-card">
+      <p class="instruction-text">
+        เลือกกิจกรรมที่คุณสนใจมากที่สุด ระบบจะนำไปสร้างแผนกิจกรรมประจำวันที่เหมาะกับคุณ
+      </p>
+      <p class="instruction-subtext">
+        คุณสามารถเลือกได้มากกว่าหนึ่งกิจกรรม
+      </p>
+    </div>
+
+    <!-- Activities Grid -->
+    <div class="activities-grid">
+      <div 
+        *ngFor="let activity of activities"
+        class="activity-card"
+        [class.selected]="isSelected(activity.activity_id)"
+        (click)="toggleActivity(activity.activity_id)">
+        
+        <div class="activity-checkbox">
+          <span class="checkmark">✓</span>
+        </div>
+        
+        <span class="activity-icon">{{ getActivityIcon(activity) }}</span>
+        <h3 class="activity-title">{{ activity.activity_name }}</h3>
+        
+        <div class="activity-tags">
+          <span 
+            *ngFor="let tag of getActivityTags(activity)" 
+            class="tag"
+            [class.tag-indoor]="tag.type === 'indoor'"
+            [class.tag-outdoor]="tag.type === 'outdoor'"
+            [class.tag-benefit]="tag.type === 'benefit'">
+            {{ tag.label }}
+          </span>
+        </div>
+        
+        <p class="activity-description">{{ activity.description || 'ไม่มีคำอธิบาย' }}</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Selection Summary Bar -->
+<div class="summary-bar">
+  <div class="selection-info">
+    เลือกแล้ว <span class="selection-count">{{ selectionCount }}</span> กิจกรรม
+  </div>
+  <div class="summary-buttons">
+    <button 
+      class="btn-clear" 
+      (click)="clearAll()"
+      [disabled]="selectionCount === 0">
+      ล้างการเลือกทั้งหมด
+    </button>
+    <button 
+      class="btn-save" 
+      (click)="saveSelection()"
+      [disabled]="selectionCount === 0 || isSaving">
+      {{ isSaving ? 'กำลังบันทึก...' : 'บันทึกกิจกรรมที่เลือก' }}
+    </button>
+  </div>
+</div>
