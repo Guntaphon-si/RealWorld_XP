@@ -1,10 +1,14 @@
 import { Component, AfterViewInit, HostListener, ElementRef, Renderer2, OnDestroy, OnInit } from '@angular/core';
-import { NgIf } from '@angular/common';
+import { NgIf } from '@angular/common'; // NgIf มาจาก CommonModule
+import { RouterLink } from '@angular/router'; // 👈 1. เพิ่มการ import RouterLink
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgIf],
+  imports: [
+    NgIf, 
+    RouterLink // 👈 2. เพิ่ม RouterLink เข้าไปใน imports array
+  ],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
@@ -13,6 +17,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   // ประกาศ property 'user' เพื่อให้ template และ method อื่นๆ ในคลาสสามารถเข้าถึงได้
   // กำหนด type เป็น object ที่มี name หรือเป็น null และให้ค่าเริ่มต้นเป็น null (ยังไม่ล็อกอิน)
   user: { username: string } | null = null; 
+  showScrollTopButton = false; // 👈 1. เพิ่ม property สำหรับควบคุมการแสดงผลปุ่ม
   
   private observer!: IntersectionObserver;
 
@@ -63,6 +68,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.renderer.removeClass(navbar, 'scrolled');
     }
+
+    // 2. ตรวจสอบตำแหน่ง scroll เพื่อแสดง/ซ่อนปุ่ม Page Up
+    // ถ้า scroll ลงมามากกว่า 400px ให้แสดงปุ่ม
+    this.showScrollTopButton = window.scrollY > 400;
 
     // Trigger scroll animations for elements
     const elements = this.el.nativeElement.querySelectorAll('.animate-on-scroll');
@@ -150,5 +159,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     localStorage.removeItem('currentUser');
     // "ประกาศ" บอกทั้งแอปว่าสถานะเปลี่ยนไปแล้ว
     window.dispatchEvent(new CustomEvent('loginStateChange'));
+  }
+
+  // 3. เพิ่มฟังก์ชันสำหรับเลื่อนกลับไปด้านบนสุด
+  scrollToTop(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // ทำให้การเลื่อนนุ่มนวล
+    });
   }
 }

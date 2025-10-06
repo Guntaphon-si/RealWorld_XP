@@ -4,6 +4,8 @@ import { ButtonTestComponent } from './button-test/button-test';
 import { AssessMentQuestion } from './assess-ment-question/assess-ment-question';
 import { ResultAndChooseActivity } from './result-and-choose-activity/result-and-choose-activity';
 import { ButtonTest } from './button-test1/button-test';
+import { AuthComponent } from './auth/auth';
+import { HomeComponent } from './home/home';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AllActivitiesComponent } from './all-activity/all-activities.compenent';
 
@@ -13,7 +15,7 @@ export const routes: Routes = [
         component: ActivityFlowComponent
     },
     {
-        path : 'test',
+        path : 'test1',
         component: ButtonTestComponent
     },
     {
@@ -25,7 +27,7 @@ export const routes: Routes = [
       component:ResultAndChooseActivity 
     },
     {
-      path:'',
+      path:'test2',
       component:ButtonTest 
     },
     {
@@ -40,5 +42,3 @@ export const routes: Routes = [
     { path: 'auth', loadComponent: () => import('./auth/auth').then(m => m.AuthComponent) },
     { path: '**', redirectTo: '' }
 ];
-
-

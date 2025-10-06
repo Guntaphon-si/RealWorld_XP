@@ -9,10 +9,11 @@
         <ul class="nav-links">
             <li><a href="#how-it-works">ต้องทำอะไรบ้าง</a></li>
             <li><a href="#benefits">ประโยชน์</a></li>
+            <li *ngIf="user"><a [routerLink]="['']" class="nav-dashboard-link">Dashboard</a></li>
         </ul>
         <div class="auth-buttons">
             <!-- แสดงเมื่อยังไม่ได้ล็อกอิน -->
-            <a *ngIf="!user" href="/auth" class="btn-login">เข้าสู่ระบบ</a>
+            <a *ngIf="!user" [routerLink]="['/auth']" class="btn-login">เข้าสู่ระบบ</a>
 
             <!-- แสดงเมื่อล็อกอินแล้ว -->
             <div *ngIf="user" class="user-profile">
@@ -30,7 +31,7 @@
         <h1>เปลี่ยนเวลาไถจอ ให้เป็นค่าประสบการณ์ชีวิต</h1>
         <p>เบื่อไหมกับการเลื่อนดูชีวิตคนอื่น? ค้นพบกิจกรรมใหม่ๆ ที่ใช่สำหรับคุณด้วยแบบสอบถามและ AI อัจฉริยะ แล้วเปลี่ยนทุกการกระทำในโลกจริงให้เป็น <strong>XP</strong> เพื่อปลดล็อกตัวตนคนใหม่ที่สนุกกว่าเดิม</p>
         <div class="cta-buttons">
-            <a href="#" class="btn-primary">ค้นหากิจกรรมที่ใช่สำหรับคุณ (ฟรี!)</a>
+            <a [routerLink]="user ? '/assessment' : '/auth'" class="btn-primary">ค้นหากิจกรรมที่ใช่สำหรับคุณ (ฟรี!)</a>
         </div>
     </div>
 </section>
@@ -77,22 +78,7 @@
     </div>
 </section>
 
-<section class="final-cta">
-    <div class="hero-content">
-        <h2 class="animate-on-scroll">พร้อมจะวางมือถือ แล้วออกไปใช้ ชีวิตจริงๆ แล้วหรือยัง?</h2>
-        <p class="animate-on-scroll">โลกข้างนอกยังมีอะไรให้ค้นหาอีกมากมาย เริ่มต้นการเดินทางของคุณวันนี้</p>
-        <div class="cta-buttons animate-on-scroll">
-            <a href="#" class="btn-primary">เริ่มทำแบบทดสอบ AI เลย!</a>
-        </div>
-    </div>
-</section>
-
-<footer>
-    <div class="footer-content">
-        <div class="footer-links">
-            <a href="#">นโยบายความเป็นส่วนตัว</a>
-            <a href="#">ข้อตกลงการใช้งาน</a>
-            <a href="#">ติดต่อเรา</a>
-        </div>
-    </div>
-</footer>
+<!-- ปุ่ม Scroll to Top -->
+<button *ngIf="showScrollTopButton" (click)="scrollToTop()" class="scroll-to-top-btn" title="กลับไปด้านบน">
+    <span>&uarr;</span> <!-- รหัส HTML สำหรับลูกศรชี้ขึ้น -->
+</button>

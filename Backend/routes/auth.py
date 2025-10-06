@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from database import get_db
 import model
@@ -40,8 +42,30 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
             headers={"WWW-Authenticate": "Bearer"},
         )
     
+    # --- เพิ่ม Logic การตรวจสอบ Day Streak ---
+    current_login_time = datetime.now(ZoneInfo("Asia/Bangkok"))
+
+    # ตรวจสอบว่าเคยมีการทำกิจกรรมสำเร็จมาก่อนหรือไม่
+    if user.first_success:
+        # คำนวณความต่างของวัน (ไม่สนใจเวลา)
+        days_difference = (current_login_time.date() - user.first_success.date()).days
+
+        if days_difference == 1:
+            # ถ้าห่างกัน 1 วันพอดี (เมื่อวานทำ วันนี้ล็อกอิน) ให้รีเซ็ตสถานะความสำเร็จของวัน
+            user.is_success = 0
+        elif days_difference >= 2:
+            # ถ้าห่างกัน 2 วันขึ้นไป (ขาดการทำกิจกรรม) ให้รีเซ็ต Streak และสถานะ
+            user.is_success = 0
+            user.day_streak = 0
+
+    # อัปเดตเวลาล็อกอินล่าสุดเป็นเวลาประเทศไทย
+    user.login_time = current_login_time
+
     # Create access token
     access_token = security.create_access_token(data={"sub": user.username})
+
+    db.commit()
+
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.get("/me", response_model=schemas.UserOut)
