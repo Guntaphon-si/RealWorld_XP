@@ -306,7 +306,7 @@ body {
 /* Progress Section */
 .progress-section {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 24px;
     margin-bottom: 50px;
 }
@@ -325,19 +325,19 @@ body {
 .progress-card:nth-child(3) { animation-delay: 0.6s; }
 
 .progress-icon {
-    font-size: 40px;
+    font-size: 60px;
     margin-bottom: 12px;
 }
 
 .progress-value {
-    font-size: 32px;
+    font-size: 45px;
     font-weight: 700;
     color: #64ffda;
     margin-bottom: 8px;
 }
 
 .progress-label {
-    font-size: 14px;
+    font-size: 20px;
     color: rgba(255, 255, 255, 0.7);
 }
 
