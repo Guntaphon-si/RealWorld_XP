@@ -143,7 +143,6 @@ export class AuthComponent implements OnInit, OnDestroy {
       window.dispatchEvent(new CustomEvent('loginStateChange'));
 
       console.log('Login and profile fetch successful', { token: tokenResponse, profile: userProfile });
-      alert('เข้าสู่ระบบสำเร็จ!');
 
       // Step 5: เปลี่ยนหน้าหลังจากทุกอย่างเสร็จสิ้น
       await this.router.navigate(['/home']);
