@@ -5,6 +5,7 @@ import { AssessMentQuestion } from './assess-ment-question/assess-ment-question'
 import { ResultAndChooseActivity } from './result-and-choose-activity/result-and-choose-activity';
 import { ButtonTest } from './button-test1/button-test';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { AllActivitiesComponent } from './all-activity/all-activities.compenent';
 
 export const routes: Routes = [
     {
@@ -30,6 +31,10 @@ export const routes: Routes = [
     {
       path: 'dashboard',
       component: DashboardComponent
+    },
+    {
+      path: 'all-activities',
+      component: AllActivitiesComponent
     },
     { path: '', loadComponent: () => import('./home/home').then(m => m.HomeComponent) },
     { path: 'auth', loadComponent: () => import('./auth/auth').then(m => m.AuthComponent) },

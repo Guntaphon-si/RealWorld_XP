@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { DashboardService, DashboardResponse, ActivityData, UserData } from '../services/dashboard.service';
 
 interface ActivityTag {
@@ -180,7 +180,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   viewAllActivities(): void {
-    this.router.navigate(['/activities']);
+    this.router.navigate(['/all-activities']);
   }
 
   // Get activity icon based on activity name or type
@@ -192,9 +192,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (name.includes('อ่าน') || name.includes('read')) return '📚';
     if (name.includes('วิ่ง') || name.includes('run')) return '🏃';
     if (name.includes('จักรยาน') || name.includes('bike')) return '🚴';
-    if (name.includes('ขยะ') || name.includes('trash')) return '🗑️';
-    if (name.includes('น้ำ') || name.includes('ดูแล') || name.includes('water')) return '💧';
-    if (name.includes('ปิด') || name.includes('พัก') || name.includes('off')) return '❌';
     return '⭐'; // Default icon
   }
 
