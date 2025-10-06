@@ -115,8 +115,7 @@ export class ActivityFlowComponent implements OnInit, OnDestroy {
   }
 
   goToDashboard(): void {
-    alert('กลับสู่หน้าหลัก...');
-    this.router.navigate(['/']);
+    this.router.navigate(['/dashboard']);
   }
 
   private startTimer(): void {

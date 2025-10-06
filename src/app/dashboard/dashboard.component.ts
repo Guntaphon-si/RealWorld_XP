@@ -69,7 +69,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // Computed properties
   get assessmentProgress(): number {
     if (!this.user) return 0;
-    return (this.user.stress_level / 10) * 100;
+    return (this.user.stress_level / 3) * 100;
   }
 
   get xpProgress(): number {
@@ -108,8 +108,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   getStressLevelText(): string {
     if (!this.user) return 'ไม่ทราบ';
     const level = this.user.stress_level;
-    if (level <= 3) return 'ต่ำ';
-    if (level <= 6) return 'ปานกลาง';
+    if (level == 1) return 'ต่ำ';
+    if (level == 2) return 'ปานกลาง';
     return 'สูง';
   }
 
@@ -159,8 +159,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   // Activity methods
-  startActivity(activity: ActivityData): void {
-    this.router.navigate(['/activity', activity.activity_id]);
+   startActivity(userId: number,activityId: number): void {
+    
+    // นำทางไปยัง path '/activity' พร้อมส่ง query params
+    this.router.navigate(['/activity'], {
+      queryParams: {
+        userId: userId,
+        activityId: activityId
+      }
+    });
   }
 
   completeActivity(activity: ActivityData): void {
