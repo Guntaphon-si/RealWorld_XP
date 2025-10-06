@@ -56,13 +56,11 @@ def complete_activity(user_id: int, request: ActivityCompletionRequest, db: Sess
         raise HTTPException(status_code=404, detail="Activity not found")
 
     now = datetime.now()
-    
-    is_successful_for_streak = False
 
-    if not user.first_success or user.first_success.date() != now.date():
+    if not user.is_success and user.first_success.date() != user.login_time:
         user.first_success = now      
         user.day_streak += 1        
-        is_successful_for_streak = True 
+        user.is_success = 1 
     
     user.xp += activity.base_xp
     if user.xp >= 100: 
@@ -78,5 +76,5 @@ def complete_activity(user_id: int, request: ActivityCompletionRequest, db: Sess
         "current_xp": user.xp,
         "xp_for_next_level": 100,
         "day_streak": user.day_streak,
-        "is_success": is_successful_for_streak 
+        "is_success": user.is_success
     }

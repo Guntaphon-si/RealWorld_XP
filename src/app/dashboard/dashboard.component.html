@@ -30,14 +30,17 @@
             <h2 class="hero-header">ผลการประเมินของคุณ</h2>
             <p class="hero-result">
                 คุณมีระดับการใช้งานโซเชียล: 
-                <strong>{{ getStressLevelText() }} ({{ user?.stress_level }}/10)</strong>
+                <strong>{{ getStressLevelText() }}</strong>
             </p>
-            <div class="progress-bar-container">
-                <div class="progress-bar-fill" [style.width.%]="assessmentProgress"></div>
+            
+            <div class="progress-icon">
+                {{user?.stress_level == 1 ? '😐' : (user?.stress_level == 2 ? '😟' : '😤')}}
             </div>
+            <!-- <div class="progress-bar-container">
+                <div class="progress-bar-fill" [style.width.%]="assessmentProgress"></div>
+            </div> -->
             <p class="hero-description">
-                คุณมีความเครียดอยู่ในระดับปานกลาง และมักใช้โซเชียลมากกว่า 5 ชั่วโมงต่อวัน 
-                เราแนะนำให้เริ่มทำกิจกรรมสั้น ๆ เพื่อช่วยปรับสมดุลชีวิตประจำวัน
+                คุณมีความเครียดอยู่ในระดับ{{ getStressLevelText() }} 
             </p>
         </section>
         <section>
@@ -55,7 +58,7 @@
                             <span>{{ xpProgress }} / 100</span>
                         </div>
                         <div class="level-bar">
-                            <div class="level-bar-fill"></div>
+                            <div class="level-bar-fill" [style.width.%]="xpProgress"></div>
                         </div>
                     </div>
                 </div>
@@ -64,23 +67,6 @@
                     <div class="progress-icon">🔥</div>
                     <div class="progress-value">{{ dayStreak }} วัน</div>
                     <div class="progress-label">ทำกิจกรรมติดต่อกัน</div>
-                </div>
-
-                <div class="progress-card">
-                    <div class="circular-progress">
-                        <svg class="progress-ring" width="120" height="120">
-                            <defs>
-                                <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" style="stop-color:#64ffda;stop-opacity:1" />
-                                    <stop offset="100%" style="stop-color:#FB923C;stop-opacity:1" />
-                                </linearGradient>
-                            </defs>
-                            <circle class="progress-ring-circle" cx="60" cy="60" r="45"></circle>
-                            <circle class="progress-ring-bar" cx="60" cy="60" r="45"></circle>
-                        </svg>
-                        <div class="progress-text">2/3</div>
-                    </div>
-                    <div class="progress-label">กิจกรรมวันนี้</div>
                 </div>
             </div>
         </section>
