@@ -17,7 +17,12 @@ interface ActivityTag {
 })
 export class AllActivitiesComponent implements OnInit {
   // Current user ID
-  currentUserId: number = 1; // TODO: Get from auth service
+  // currentUserId: number = 1; // TODO: Get from auth service
+  getUserId(): number | null {
+    const data = localStorage.getItem('currentUser');
+    return data ? JSON.parse(data).id : null;
+  }
+  currentUserId: number = this.getUserId() || 1;
 
   // Activities data
   activities: ActivityWithSelection[] = [];
