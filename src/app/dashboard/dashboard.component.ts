@@ -159,8 +159,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   // Activity methods
-  startActivity(activity: ActivityData): void {
-    this.router.navigate(['/activity', activity.activity_id]);
+   startActivity(userId: number,activityId: number): void {
+    
+    // นำทางไปยัง path '/activity' พร้อมส่ง query params
+    this.router.navigate(['/activity'], {
+      queryParams: {
+        userId: userId,
+        activityId: activityId
+      }
+    });
   }
 
   completeActivity(activity: ActivityData): void {
