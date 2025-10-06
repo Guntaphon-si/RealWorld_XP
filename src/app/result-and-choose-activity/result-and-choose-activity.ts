@@ -36,6 +36,7 @@ export class ResultAndChooseActivity implements OnInit{
   isLoading = signal<boolean>(true);
   lifeStyleId = signal<number[]>([]);
   activities = signal<Activity[]>([]);
+  stressLevel = signal<number>(0);
   pageSize = 6; 
   currentPage = signal(1); 
   totalPages = computed(() => {
@@ -98,6 +99,10 @@ export class ResultAndChooseActivity implements OnInit{
     this.subscription = this.sharedDataService.currentUserId.subscribe(userID => {
       console.log(userID);
       this.userId.set(userID);
+    });
+    this.subscription = this.sharedDataService.currentUserStress.subscribe(userStress => {
+      console.log( "userStress: ",userStress);
+      this.stressLevel.set(userStress);
     });
    
     this.apiService.getUserStress(this.userId()).subscribe({
@@ -216,6 +221,25 @@ export class ResultAndChooseActivity implements OnInit{
           alert('ไม่สามารถบันทึกข้อมูลได้');
         }
       });
+      const dataToUpdate: UserUpdatePayload = {
+        stress_level: this.stressLevel() 
+      };
+      const userId = this.userId();
+       this.apiService.updateUser(userId, dataToUpdate).subscribe({
+        next: (response) => {
+            console.log('อัปเดต UserStress สำเร็จ:', response);
+            this.router.navigate(['/dashboard']);
+        },
+        error: (err) => {
+          // 4. หากเกิดข้อผิดพลาด, แสดง log และปิดสถานะ loading
+          console.error('เกิดข้อผิดพลาดในการอัปเดต UserUserStress:', err);
+          if (err.status === 404) {
+            alert('ไม่พบผู้ใช้งาน ID นี้');
+          } else {
+            alert('เกิดข้อผิดพลาดบางอย่าง');
+          }
+        }
+      });
     }else if(this.isAssess() === 1){
       this.apiService.getUserPlanId(this.userId()).subscribe({
         next: (response) => {
@@ -258,7 +282,7 @@ export class ResultAndChooseActivity implements OnInit{
       });
 
       const dataToUpdate: UserUpdatePayload = {
-        stress_level: 7 ,
+        stress_level: this.stressLevel() ,
         xp: 0,
         level:1,
         day_streak:0,
@@ -288,6 +312,7 @@ export class ResultAndChooseActivity implements OnInit{
                     next: (response) => {
                       // 3. เมื่อสำเร็จ, แสดงผลลัพธ์ และปิดสถานะ loading
                       console.log('บันทึก Lifestyles สำเร็จ:', response);
+                      this.router.navigate(['/dashboard']);
                     },
                     error: (err) => {
                       // 4. หากเกิดข้อผิดพลาด, แสดง log และปิดสถานะ loading
@@ -313,7 +338,5 @@ export class ResultAndChooseActivity implements OnInit{
         }
       });
     }
-    
-    alert(`สร้างแผนสำเร็จ!\nกิจกรรมที่เลือก:\n${activityNames}\n\nกำลังไปยัง Dashboard...`);
   }
 }

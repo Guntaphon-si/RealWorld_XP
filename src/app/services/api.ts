@@ -85,6 +85,18 @@ export interface DetailResponse {
   detail: string;
 }
 
+export interface PredictionRequest {
+  "screen_time_hours": number;
+  "social_media_platforms_used": number;
+  "hours_on_TikTok": number;
+  "sleep_hours": number;
+  "mood_score": number;
+}
+
+export interface PredictionResponse {
+  stress_level_class: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -114,7 +126,7 @@ export class ApiService {
   private deleteAcitivityUrl = "http://127.0.0.1:8000/api/deleteActivityInPlan";
   private updateUserUrl = 'http://127.0.0.1:8000/api/updateUser';
   private deleteUserLifestyleUrl = 'http://127.0.0.1:8000/api/deleteUserLifeStyle';
-
+  private stressPredictUrl = 'http://127.0.0.1:8000/api/predict_rf';
   // 1. ทำการ "ฉีด" (Inject) HttpClient เข้ามาใช้งาน
 
   // 2. สร้างฟังก์ชันสำหรับส่งข้อมูลฟอร์ม
@@ -197,5 +209,9 @@ export class ApiService {
     //    - Argument 1: URL
     //    - Argument 2: Options object ซึ่งเราใส่ params เข้าไป
     return this.http.delete<DetailResponse>(this.deleteUserLifestyleUrl, { params });
+  }
+
+  predictStressLevel(data:any): Observable<PredictionResponse> {
+    return this.http.post<PredictionResponse>(this.stressPredictUrl, data);
   }
 }

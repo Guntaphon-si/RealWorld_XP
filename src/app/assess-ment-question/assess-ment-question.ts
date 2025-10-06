@@ -1,7 +1,7 @@
 import { Component,OnInit ,signal,ViewChild, ElementRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule ,FormGroup, FormControl, Validators,ReactiveFormsModule} from '@angular/forms';
-import { ApiService } from '../services/api';
+import { ApiService, PredictionRequest } from '../services/api';
 import { DataService } from '../shared/data';
 import { Router } from '@angular/router';
 interface ParticleStyle {
@@ -51,16 +51,22 @@ export class AssessMentQuestion implements OnInit{
       healthConsciousness: new FormControl(null, [Validators.required]),
       educationLevel: new FormControl(null, [Validators.required]),
       dailyScreenTime: new FormControl(null, [Validators.required]),
+      social_media_platforms_used: new FormControl(null, [Validators.required]),
+      hours_on_TikTok: new FormControl(null, [Validators.required]),
+      sleep_hours: new FormControl(null, [Validators.required]),
+      
+      // Step 3
+      mood_score: new FormControl(null, [Validators.required]),
       environmentalAwareness: new FormControl(null, [Validators.required]),
       socialMediaInfluence: new FormControl(null, [Validators.required]),
-      // Step 3
       riskTolerance: new FormControl(null, [Validators.required]),
       professionalTrainings: new FormControl(null, [Validators.required]),
       techSavviness: new FormControl(null, [Validators.required]),
       financialWellness: new FormControl(null, [Validators.required]),
+     
+      // Step 4
       lifestyleBalance: new FormControl(null, [Validators.required]),
       entertainmentEngagement: new FormControl(null, [Validators.required]),
-      // Step 4
       socialResponsibility: new FormControl(null, [Validators.required]),
       workLifeBalance: new FormControl(null, [Validators.required]),
       investmentRiskAppetite: new FormControl(null, [Validators.required]),
@@ -103,7 +109,15 @@ export class AssessMentQuestion implements OnInit{
     if (!this.socialForm.valid) {
       return; // ถ้าฟอร์มไม่สมบูรณ์ ก็ไม่ต้องทำอะไรต่อ
     }
-
+    const requestData: PredictionRequest = {
+      "screen_time_hours": this.socialForm.value.dailyScreenTime,
+      "social_media_platforms_used": this.socialForm.value.social_media_platforms_used,
+      "hours_on_TikTok": this.socialForm.value.hours_on_TikTok,
+      "sleep_hours": this.socialForm.value.sleep_hours,
+      "mood_score": this.socialForm.value.mood_score
+    };
+    console.log("Stress",requestData);
+    
     this.isLoading = true; // เริ่ม loading
     const payload = this.transformFormData(this.socialForm.value);
     console.log('Transformed Payload to be sent:', payload);
@@ -115,7 +129,18 @@ export class AssessMentQuestion implements OnInit{
         console.log('API Response:', response);
         this.lifestyleDataService.updateApiData(response);
       // 3. Navigate ไปยังหน้าแสดงผล
-        this.router.navigate(['/result']);
+        this.apiService.predictStressLevel(requestData).subscribe({
+          next: (response) => {
+            // --- ✅ สำเร็จ ---
+            this.lifestyleDataService.updateUserStress(response.stress_level_class+1)
+            console.log('API Response Stress:', response.stress_level_class+1);
+            this.router.navigate(['/result']);
+          },
+          error: (err) => {
+            // --- ❌ เกิดข้อผิดพลาด ---
+            console.error('API Error Stress:', err);
+          }
+        });
       },
       // 6. จัดการกับข้อผิดพลาด (กรณี API ยิงไม่สำเร็จ)
       error: (error) => {
@@ -175,9 +200,9 @@ export class AssessMentQuestion implements OnInit{
   // ตรวจสอบว่าฟอร์มในหน้าปัจจุบันถูกต้องหรือไม่
   isCurrentStepValid(): boolean {
     const controlsStep1 = ['age','gender', 'vacationDays', 'monthlySpend', 'onlinePurchases', 'charityDonations', 'weeklyExercise'];
-    const controlsStep2 = ['portfolioValue', 'healthConsciousness', 'educationLevel', 'dailyScreenTime', 'environmentalAwareness', 'socialMediaInfluence'];
-    const controlsStep3 = ['riskTolerance', 'professionalTrainings', 'techSavviness', 'financialWellness', 'lifestyleBalance', 'entertainmentEngagement'];
-    const controlsStep4 = ['socialResponsibility', 'workLifeBalance', 'investmentRiskAppetite', 'ecoConsciousness', 'stressManagement', 'timeManagement'];
+    const controlsStep2 = ['portfolioValue', 'healthConsciousness', 'educationLevel', 'dailyScreenTime', 'social_media_platforms_used', 'hours_on_TikTok','sleep_hours'];
+    const controlsStep3 = ['mood_score', 'environmentalAwareness', 'socialMediaInfluence', 'riskTolerance', 'professionalTrainings', 'techSavviness','financialWellness'];
+    const controlsStep4 = ['lifestyleBalance', 'entertainmentEngagement', 'socialResponsibility', 'workLifeBalance', 'investmentRiskAppetite', 'ecoConsciousness','stressManagement','timeManagement'];
 
     let controlsToCheck: string[] = [];
     switch(this.currentStep) {

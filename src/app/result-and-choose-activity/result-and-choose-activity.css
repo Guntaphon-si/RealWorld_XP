@@ -310,13 +310,16 @@
         grid-template-columns: repeat(2, 1fr);
     }
 }
-.BadgeContainer{
+.BadgeContainer,.BadgeContainer-stress{
     display: flex;
     flex-wrap: wrap;
     width: 100%;
     justify-content: center;
     margin: 0 auto;
     gap:5px
+}
+.BadgeContainer-stress{
+    margin-bottom: 30px;
 }
 .pagination-controls {
   display: flex;
@@ -411,3 +414,24 @@
     opacity: 1;
   }
 }
+.exit-button {
+            justify-self: end;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .exit-button:hover {
+            border-color: #64ffda;
+            color: #64ffda;
+            background: rgba(100, 255, 218, 0.1);
+            transform: translateY(-2px);
+        }

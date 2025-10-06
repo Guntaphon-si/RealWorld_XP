@@ -15,6 +15,10 @@ export class DataService {
   private userIdSource = new BehaviorSubject<number>(this.getInitialData(this.userIdStorageKey));
   currentUserId = this.userIdSource.asObservable();
 
+  private readonly userStressStorageKey = 'currentUserStress';
+  private userStress = new BehaviorSubject<number>(this.getInitialData(this.userStressStorageKey));
+  currentUserStress = this.userStress.asObservable();
+
     private getInitialData(key: string): any {
     try {
       const savedData = localStorage.getItem(key);
@@ -46,6 +50,11 @@ export class DataService {
   updateUserId(id: number): void {
     this.userIdSource.next(id);
     localStorage.setItem(this.userIdStorageKey, JSON.stringify(id));
+  }
+
+  updateUserStress(value: number): void {
+    this.userStress.next(value);
+    localStorage.setItem(this.userStressStorageKey, JSON.stringify(value));
   }
 
 }

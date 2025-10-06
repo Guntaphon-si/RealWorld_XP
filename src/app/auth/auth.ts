@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { Observable, firstValueFrom } from 'rxjs';
 import { tap } from 'rxjs/operators';
-
+import { DataService } from '../shared/data';
 @Component({
   selector: 'app-auth',
   standalone: true,
@@ -41,7 +41,8 @@ export class AuthComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private userIdDataService: DataService,
   ) {}
 
   ngOnInit() {
@@ -143,7 +144,7 @@ export class AuthComponent implements OnInit, OnDestroy {
       window.dispatchEvent(new CustomEvent('loginStateChange'));
 
       console.log('Login and profile fetch successful', { token: tokenResponse, profile: userProfile });
-
+      this.userIdDataService.updateUserId(userProfile.id);
       // Step 5: เปลี่ยนหน้าหลังจากทุกอย่างเสร็จสิ้น
       await this.router.navigate(['/home']);
     } catch (err) {

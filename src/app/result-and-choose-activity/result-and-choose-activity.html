@@ -29,10 +29,45 @@
 <nav class="top-nav">
   <div class="logo">RealWorld XP</div>
   <div class="nav-buttons">
-    <button class="nav-btn">ออก</button>
+   <a href="/" class="exit-button">ออก</a>
   </div>
 </nav>
 <main class="main-content">
+  <div class="header">
+    <h1>ระดับความเครียดของคุณ</h1>
+  </div>
+  <div class="BadgeContainer-stress">
+        @switch(stressLevel()){ 
+            @case (1) {
+                <div class="lifestyle-badge">
+                <span class="lifestyle-icon">😌</span>
+                <h3 class="lifestyle-title">Low</h3>
+                <p class="lifestyle-desc">รู้สึกสงบและปลอดโปร่ง พร้อมเผชิญหน้ากับวันใหม่ด้วยใจที่เป็นสุข</p>
+                </div>
+            } 
+            @case (2) {
+                <div class="lifestyle-badge">
+                <span class="lifestyle-icon">😕</span>
+                <h3 class="lifestyle-title">Medium</h3>
+                <p class="lifestyle-desc">จิตใจที่เต็มไปด้วยความคิดมากมาย พยายามหาทางรับมือกับความท้าทายในชีวิต</p>
+                </div>
+            } 
+            @case (3) {
+                <div class="lifestyle-badge">
+                <span class="lifestyle-icon">😡</span>
+                <h3 class="lifestyle-title">High</h3>
+                <p class="lifestyle-desc">ความรู้สึกที่เหมือนถูกทิ้งให้แบกรับความกดดันที่หนักอึ้งไว้เพียงลำพัง</p>
+                </div>
+            } 
+            @default {
+                <div class="lifestyle-badge">
+                <span class="lifestyle-icon">🌱</span>
+                <h3 class="lifestyle-title">ERROR</h3>
+                <p class="lifestyle-desc">คุณไม่เครียด</p>
+                </div>
+            } 
+    }
+  </div>
   <div class="header">
     <h1>กิจกรรมที่เหมาะสมกับคุณ</h1>
     <p class="subtitle">
@@ -43,7 +78,6 @@
       ลองเลือกกิจกรรมที่อยากทำต่อไปนี้
     </p>
   </div>
-
   <!-- Lifestyle Badge -->
   <div class="BadgeContainer">
     @for(lifestyle of lifeStyleId(); track lifestyle){ 
@@ -93,7 +127,7 @@
         }
     }
   </div>
-
+  
   <section class="activities-section">
     <div class="activities-grid">
       <!-- 
