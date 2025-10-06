@@ -6,6 +6,7 @@ import { ResultAndChooseActivity } from './result-and-choose-activity/result-and
 import { ButtonTest } from './button-test1/button-test';
 import { AuthComponent } from './auth/auth';
 import { HomeComponent } from './home/home';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 export const routes: Routes = [
     {
@@ -28,17 +29,11 @@ export const routes: Routes = [
       path:'test2',
       component:ButtonTest 
     },
-    { 
-      path: '', 
-      component: HomeComponent 
+    {
+      path: 'dashboard',
+      component: DashboardComponent
     },
-    { 
-      path: 'auth', 
-      component: AuthComponent 
-    },
-    { 
-      path: '**', 
-      redirectTo: '' 
-    }
-    // หากไม่พบ Route ไหนเลย ให้กลับไปหน้า dashboard
+    { path: '', loadComponent: () => import('./home/home').then(m => m.HomeComponent) },
+    { path: 'auth', loadComponent: () => import('./auth/auth').then(m => m.AuthComponent) },
+    { path: '**', redirectTo: '' }
 ];

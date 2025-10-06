@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
 // Removed AuthComponent import, as it is standalone and should not be declared here
 import { CommonModule } from '@angular/common';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 const routes: Routes = [
@@ -20,7 +21,8 @@ const routes: Routes = [
     FormsModule,
     HttpClientModule,
     CommonModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    DashboardComponent
   ],
   providers: [],
   // Removed bootstrap, as standalone bootstrap is used in main.ts

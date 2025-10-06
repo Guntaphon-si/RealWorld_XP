@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealWorld XP - แดชบอร์ดของฉัน</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard.component.css">
+</head>
+<body>
+    <!-- Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="logo">RealWorld XP</div>
+        <div class="page-title">แดชบอร์ดของฉัน</div>
+        <div class="profile-section">
+            <button class="profile-btn" onclick="toggleDropdown()">👤</button>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <div class="dropdown-item" onclick="openSettings()">⚙️ ตั้งค่า</div>
+                <div class="dropdown-item" onclick="logout()">🚪 ออกจากระบบ</div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Summary Card -->
+        <section class="hero-card">
+            <h2 class="hero-header">ผลการประเมินของคุณ</h2>
+            <p class="hero-result">
+                คุณมีระดับการใช้งานโซเชียล: 
+                <strong>{{ getStressLevelText() }} ({{ user?.stress_level }}/10)</strong>
+            </p>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" [style.width.%]="assessmentProgress"></div>
+            </div>
+            <p class="hero-description">
+                คุณมีความเครียดอยู่ในระดับปานกลาง และมักใช้โซเชียลมากกว่า 5 ชั่วโมงต่อวัน 
+                เราแนะนำให้เริ่มทำกิจกรรมสั้น ๆ เพื่อช่วยปรับสมดุลชีวิตประจำวัน
+            </p>
+        </section>
+
+        <!-- Recommended Activities -->
+        <section class="activities-section">
+            <div class="section-header">
+                <h2>กิจกรรมที่เหมาะกับคุณ</h2>
+                <a href="#" class="view-all-link">ดูทั้งหมด →</a>
+            </div>
+            <div class="activities-grid">
+                <div class="activity-card" *ngFor="let activity of activities">
+                    <span class="activity-icon">{{ getActivityIcon(activity) }}</span>
+                    <h3 class="activity-title">{{ activity.activity_name }}</h3>
+                    <div class="activity-tags">
+                        <span class="tag" *ngFor="let tag of getActivityTags(activity)">
+                        {{ tag.label }}
+                        </span>
+                    </div>
+                    <button class="btn-start-activity" (click)="startActivity(activity)">
+                        เริ่มกิจกรรมนี้
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Daily Progress -->
+        <section>
+            <div class="section-header">
+                <h2>ความก้าวหน้าในวันนี้</h2>
+            </div>
+            <div class="progress-section">
+                <div class="progress-card">
+                    <div class="progress-icon">⭐</div>
+                    <div class="progress-value">Level {{ userLevel }}</div>
+                    <div class="progress-label">ระดับของคุณ</div>
+                    <div class="level-progress-container">
+                        <div class="level-info">
+                            <span>XP</span>
+                            <span>65 / 100</span>
+                        </div>
+                        <div class="level-bar">
+                            <div class="level-bar-fill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="progress-card">
+                    <div class="progress-icon">🔥</div>
+                    <div class="progress-value">{{ dayStreak }} วัน</div>
+                    <div class="progress-label">ทำกิจกรรมติดต่อกัน</div>
+                </div>
+
+                <div class="progress-card">
+                    <div class="circular-progress">
+                        <svg class="progress-ring" width="120" height="120">
+                            <defs>
+                                <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#64ffda;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#FB923C;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="progress-ring-circle" cx="60" cy="60" r="45"></circle>
+                            <circle class="progress-ring-bar" cx="60" cy="60" r="45"></circle>
+                        </svg>
+                        <div class="progress-text">2/3</div>
+                    </div>
+                    <div class="progress-label">กิจกรรมวันนี้</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        RealWorld XP © 2025 | ช่วยสร้างชีวิตสมดุลในโลกจริง
+    </footer>
+
+    <script>
+        // Create particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Toggle dropdown
+        function toggleDropdown() {
+            const dropdown = document.getElementById('dropdownMenu');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const profileSection = document.querySelector('.profile-section');
+            if (!profileSection.contains(e.target)) {
+                document.getElementById('dropdownMenu').classList.remove('active');
+            }
+        });
+
+        // Navigation functions
+        function openSettings() {
+            alert('เปิดหน้าตั้งค่า');
+        }
+
+        function logout() {
+            if (confirm('คุณต้องการออกจากระบบหรือไม่?')) {
+                alert('ออกจากระบบเรียบร้อย');
+            }
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            createParticles();
+        });
+    </script>
+</body>
+</html>
