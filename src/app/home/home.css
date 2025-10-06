@@ -67,6 +67,16 @@ nav.scrolled { padding: 15px 50px; background: rgba(15, 15, 35, 0.95); }
 .nav-links a { color: white; text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
 .nav-links a:hover { color: #64ffda; }
 .cta-nav { background: linear-gradient(45deg, #64ffda, #00d4aa); color: #0f0f23; padding: 12px 25px; border-radius: 30px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
+.nav-dashboard-link {
+    background: rgba(100, 255, 218, 0.1);
+    color: #64ffda !important; /* ใช้ !important เพื่อให้แน่ใจว่าสีจะถูก override */
+    padding: 8px 18px;
+    border-radius: 20px;
+    border: 1px solid rgba(100, 255, 218, 0.2);
+}
+.nav-dashboard-link:hover {
+    background: rgba(100, 255, 218, 0.2);
+}
 .cta-nav:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(100, 255, 218, 0.3); }
 
 /* --- Hero & Final CTA Section --- */
@@ -185,4 +195,30 @@ footer { background: #0f0f23; padding: 60px 50px 30px; border-top: 1px solid rgb
 .btn-logout:hover {
     background: rgba(255, 123, 123, 0.1);
     box-shadow: 0 0 15px rgba(255, 123, 123, 0.2);
+}
+
+/* --- Scroll to Top Button --- */
+.scroll-to-top-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: rgba(100, 255, 218, 0.8);
+    color: #0f0f23;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.scroll-to-top-btn:hover {
+    background: #64ffda; /* สว่างขึ้นเมื่อเมาส์ชี้ */
+    transform: scale(1.1); /* ขยายเล็กน้อย */
 }
