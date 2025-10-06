@@ -64,8 +64,26 @@ def complete_activity(user_id: int, request: ActivityCompletionRequest, db: Sess
     
     user.xp += activity.base_xp
     if user.xp >= 100: 
-        user.level += 1
-        user.xp -= 100
+        # เก็บ level เดิมไว้ก่อนเพื่อเปรียบเทียบ
+        original_level = user.level 
+        
+        # คำนวณ level ที่เพิ่มขึ้นทั้งหมด
+        levels_gained = user.xp // 100
+        user.level += levels_gained
+        user.xp %= 100 # เอาแค่เศษ xp ที่เหลือ
+
+        # --- ✅ เพิ่ม Logic การลด Stress Level ---
+        # คำนวณว่าข้ามผ่าน "หลัก 100" ไปกี่ครั้ง
+        milestone_crossings = (user.level // 100) - (original_level // 100)
+        
+        if milestone_crossings > 0:
+            # ลด stress_level ตามจำนวนครั้งที่ข้ามหลัก 100
+            for _ in range(milestone_crossings):
+                if user.stress_level > 1:
+                    user.stress_level -= 1
+                else:
+                    # ถ้าเหลือ 1 แล้วก็ไม่ต้องลดอีก
+                    break
         
     db.commit()
     db.refresh(user)
