@@ -60,9 +60,14 @@ body {
 
 .logo {
     font-size: 24px;
-    font-weight: 700;
+    font-weight: 800;
     color: #64ffda;
-    letter-spacing: -0.5px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.logo:hover {
+    text-shadow: 0 0 20px #64ffda;
 }
 
 .page-title {

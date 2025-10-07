@@ -19,7 +19,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   isDropdownOpen = false;
 
   // Current user ID (get from auth service or session)
-  currentUserId: number = 1; // TODO: Get from authentication service
+  // currentUserId: number = 1; // TODO: Get from authentication service
+  getUserId(): number | null {
+    const data = localStorage.getItem('currentUser');
+    return data ? JSON.parse(data).id : null;
+  }
+  currentUserId: number = this.getUserId() || 1;
 
   // User data
   user: UserData | null = null;
