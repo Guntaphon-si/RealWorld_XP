@@ -127,6 +127,7 @@ export class ApiService {
   private updateUserUrl = 'http://127.0.0.1:8000/api/updateUser';
   private deleteUserLifestyleUrl = 'http://127.0.0.1:8000/api/deleteUserLifeStyle';
   private stressPredictUrl = 'http://127.0.0.1:8000/api/predict_rf';
+  private tabNetLifeStyle = "http://127.0.0.1:8000/api/predictLifeStyleTabnet" ;
   // 1. ทำการ "ฉีด" (Inject) HttpClient เข้ามาใช้งาน
 
   // 2. สร้างฟังก์ชันสำหรับส่งข้อมูลฟอร์ม
@@ -135,7 +136,8 @@ export class ApiService {
   submitAssessment(formData: any): Observable<any> {
     // 3. ใช้ http.post เพื่อส่งข้อมูล (Method POST)
     // Argument ตัวแรกคือ URL, ตัวที่สองคือข้อมูลที่จะส่ง (body)
-    return this.http.post<any>(this.apiUrlPredictLifeStyle, formData);
+    // return this.http.post<any>(this.apiUrlPredictLifeStyle, formData);
+    return this.http.post<any>(this.tabNetLifeStyle, formData);
   }
   getActivitiesByLifestyles(lifestyleIds: number[]): Observable<any[]> {
     

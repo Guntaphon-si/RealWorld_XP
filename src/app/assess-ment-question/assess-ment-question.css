@@ -621,3 +621,17 @@
 .pagination-btn:visited{
     color: #ffffff;
 }
+
+/* === Error Message Styling (Theme-Aligned) === */
+
+/* ส่วนของข้อความแจ้งเตือนใต้ Input */
+.error-message {
+  color: #FB923C; /* ใช้สีส้มเพื่อให้เข้ากับธีม */
+  font-size: 0.875rem; /* 14px, ขนาดตัวอักษรที่เล็กลงมาเล็กน้อย */
+  font-weight: 500;
+  margin-top: 10px; /* เพิ่มระยะห่างจากขอบบน */
+  padding-left: 5px;
+  /* เพิ่ม animation ให้ข้อความค่อยๆ ปรากฏขึ้นอย่างนุ่มนวล */
+  animation: fadeInUp 0.5s ease-out;
+}
+

@@ -1,5 +1,7 @@
 import torch
 import torch.nn as nn
+import numpy as np
+from pytorch_tabnet.tab_model import TabNetClassifier
 
 class EmbeddingMLP(nn.Module):
     def __init__(self, num_numeric, cat_dims, n_classes, emb_szs=None, hidden=[512,256], dropout=0.3):
@@ -59,6 +61,54 @@ def predict_with_both(x_num, x_cat, threshold=0.6):
         probs_sigmoid = torch.sigmoid(logits)
         pred_multilabel_idx = (probs_sigmoid > threshold).nonzero(as_tuple=True)[1].tolist()
         pred_multilabel_names = [class_mapping[i] for i in pred_multilabel_idx]
+
+    return {
+        "softmax_probs": probs_softmax.cpu().numpy().round(3).tolist(),
+        "pred_class_idx": pred_class_idx,
+        "pred_class_name": pred_class_name,
+        "sigmoid_probs": probs_sigmoid.cpu().numpy().round(3).tolist(),
+        "pred_multilabel_idx": pred_multilabel_idx,
+        "pred_multilabel_names": pred_multilabel_names
+    }
+
+
+
+# TabNet
+
+
+modelTabnet = TabNetClassifier()
+modelTabnet.load_model("./tabnet_lifestyle_final.zip")
+# ตั้งโหมด eval (เพื่อปิด dropout)
+
+# -------------------------
+# ฟังก์ชัน predict_with_both
+# -------------------------
+def predict_with_both_tabnet(x_num, x_cat, threshold=0.6):
+    """
+    ทำงานเหมือน predict_with_both() แต่รองรับ input แยก numeric / categorical
+    """
+    # รวม numeric + categorical → 1 feature vector
+    if isinstance(x_num, torch.Tensor):
+        x_num = x_num.cpu().numpy()
+    if isinstance(x_cat, torch.Tensor):
+        x_cat = x_cat.cpu().numpy()
+
+    # ถ้าเป็น 1 record ให้ reshape เป็น (1, n_features)
+    x_input = np.concatenate([x_num, x_cat], axis=1)
+
+    # ---------- ได้ logits จาก TabNet ----------
+    logits = modelTabnet.predict_proba(x_input)
+    logits_t = torch.tensor(logits, dtype=torch.float32)
+
+    # ---------- Softmax ----------
+    probs_softmax = torch.softmax(logits_t, dim=1)
+    pred_class_idx = probs_softmax.argmax(dim=1).item()
+    pred_class_name = class_mapping[pred_class_idx]
+
+    # ---------- Sigmoid ----------
+    probs_sigmoid = torch.sigmoid(logits_t)
+    pred_multilabel_idx = (probs_sigmoid > threshold).nonzero(as_tuple=True)[1].tolist()
+    pred_multilabel_names = [class_mapping[i] for i in pred_multilabel_idx]
 
     return {
         "softmax_probs": probs_softmax.cpu().numpy().round(3).tolist(),

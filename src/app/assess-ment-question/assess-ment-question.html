@@ -35,6 +35,16 @@
       <div class="question-group">
         <div class="question-text">1. กรุณาระบุอายุของคุณ (ปี)</div>
         <input type="number" class="textarea-field" formControlName="age" placeholder="กรอกอายุของคุณ...">
+        @if (socialForm.get('age')?.invalid && (socialForm.get('age')?.touched || socialForm.get('age')?.dirty)) {
+          <div class="error-message">
+            @if (socialForm.get('age')?.hasError('max')) {
+              <span>อายุต้องไม่เกิน 200 ปี</span>
+            }
+            @if (socialForm.get('age')?.hasError('min')) {
+              <span>อายุต้องไม่ต่ำกว่า 1 ปี</span>
+            }
+          </div>
+        }
       </div>
       <div class="question-group">
         <div class="question-text">2. กรุณาระบุเพศของคุณ</div>
@@ -46,10 +56,27 @@
       <div class="question-group">
         <div class="question-text">3. ในหนึ่งปี โดยเฉลี่ยแล้วคุณมีวันหยุดพักร้อนกี่วัน?</div>
         <input type="number" class="textarea-field" formControlName="vacationDays" placeholder="กรอกจำนวนวัน...">
+        @if (socialForm.get('vacationDays')?.invalid && (socialForm.get('vacationDays')?.touched || socialForm.get('vacationDays')?.dirty)) {
+            <div class="error-message">
+              @if (socialForm.get('vacationDays')?.hasError('min')) {
+                <span>จำนวนวันหยุดต้องไม่ต่ำกว่า 0 วัน</span>
+              }
+              @if (socialForm.get('vacationDays')?.hasError('max')) {
+                <span>จำนวนวันหยุดต้องไม่เกิน 365 วัน</span>
+              }
+            </div>
+          }
       </div>
       <div class="question-group">
         <div class="question-text">4. โดยเฉลี่ย คุณใช้จ่ายเงินเพื่อความบันเทิงประมาณเดือนละเท่าไหร่?</div>
         <input type="number" class="textarea-field" formControlName="monthlySpend" placeholder="กรอกจำนวนเงิน (บาท)...">
+        @if (socialForm.get('monthlySpend')?.invalid && (socialForm.get('monthlySpend')?.touched || socialForm.get('monthlySpend')?.dirty)) {
+          <div class="error-message">
+            @if (socialForm.get('monthlySpend')?.hasError('min')) {
+              <span>ค่าใช้จ่ายต้องไม่น้อยกว่า 0</span>
+            }
+          </div>
+        }
       </div>
       <div class="question-group">
         <div class="question-text">5. ในเดือนที่ผ่านมา คุณซื้อสินค้าออนไลน์ประมาณกี่ครั้ง?</div>
@@ -62,11 +89,28 @@
       <div class="question-group">
         <div class="question-text">7. โดยเฉลี่ยแล้ว ในหนึ่งสัปดาห์คุณออกกำลังกายกี่ชั่วโมง?</div>
         <input type="number" class="textarea-field" formControlName="weeklyExercise" placeholder="กรอกจำนวนชั่วโมง...">
+         @if (socialForm.get('weeklyExercise')?.invalid && (socialForm.get('weeklyExercise')?.touched || socialForm.get('weeklyExercise')?.dirty)) {
+          <div class="error-message">
+            @if (socialForm.get('weeklyExercise')?.hasError('min')) {
+              <span>ชั่วโมงออกกำลังกายต้องไม่น้อยกว่า 0</span>
+            }
+            @if (socialForm.get('weeklyExercise')?.hasError('max')) {
+              <span>ชั่วโมงออกกำลังกายต้องไม่เกิน 168 ชั่วโมง/สัปดาห์</span>
+            }
+          </div>
+        }
       </div>
     } @else if (currentStep === 2) {
       <div class="question-group">
         <div class="question-text">8. ปัจจุบันพอร์ตการลงทุนทั้งหมดของคุณมีมูลค่าประมาณเท่าไหร่?</div>
         <input type="number" class="textarea-field" formControlName="portfolioValue" placeholder="กรอกมูลค่า (บาท)...">
+        @if (socialForm.get('portfolioValue')?.invalid && (socialForm.get('portfolioValue')?.touched || socialForm.get('portfolioValue')?.dirty)) {
+          <div class="error-message">
+            @if (socialForm.get('portfolioValue')?.hasError('min')) {
+              <span>มูลค่าต้องไม่น้อยกว่า 0</span>
+            }
+          </div>
+        }
       </div>
       <div class="question-group">
         <div class="question-text">9. คุณใส่ใจต่อสุขภาพและการเลือกรับประทานอาหารที่มีประโยชน์มากน้อยเพียงใด?</div>
@@ -85,32 +129,79 @@
           <div class="radio-option"><input type="radio" id="el2" formControlName="educationLevel" value="2"><label for="el2">ประถมศึกษา</label></div>
           <div class="radio-option"><input type="radio" id="el3" formControlName="educationLevel" value="3"><label for="el3">มัธยมศึกษาตอนต้น</label></div>
           <div class="radio-option"><input type="radio" id="el4" formControlName="educationLevel" value="4"><label for="el4">มัธยมศึกษาตอนปลาย หรือ ปวช.</label></div>
-          <div class="radio-option"><input type="radio" id="el5" formControlName="educationLevel" value="8"><label for="el5">อนุปริญญา หรือ ปวส.</label></div>
-          <div class="radio-option"><input type="radio" id="el6" formControlName="educationLevel" value="10"><label for="el6">ปริญญาตรี</label></div>
-          <div class="radio-option"><input type="radio" id="el7" formControlName="educationLevel" value="11"><label for="el7">ปริญญาโท</label></div>
-          <div class="radio-option"><input type="radio" id="el8" formControlName="educationLevel" value="15"><label for="el8">ปริญญาเอก</label></div>
+          <div class="radio-option"><input type="radio" id="el5" formControlName="educationLevel" value="5"><label for="el5">อนุปริญญา หรือ ปวส.</label></div>
+          <div class="radio-option"><input type="radio" id="el6" formControlName="educationLevel" value="6"><label for="el6">ปริญญาตรี</label></div>
+          <div class="radio-option"><input type="radio" id="el7" formControlName="educationLevel" value="7"><label for="el7">ปริญญาโท</label></div>
+          <div class="radio-option"><input type="radio" id="el8" formControlName="educationLevel" value="8"><label for="el8">ปริญญาเอก</label></div>
         </div>
       </div>
       <div class="question-group">
         <div class="question-text">11. ในวันปกติ คุณใช้เวลาอยู่หน้าจอ (นอกเหนือจากเวลาทำงาน) ประมาณวันละกี่ชั่วโมง?</div>
         <input type="number" class="textarea-field" formControlName="dailyScreenTime" placeholder="กรอกจำนวนชั่วโมง...">
+         @if (socialForm.get('dailyScreenTime')?.invalid && (socialForm.get('dailyScreenTime')?.touched || socialForm.get('dailyScreenTime')?.dirty)) {
+          <div class="error-message">
+              @if (socialForm.get('dailyScreenTime')?.hasError('min')) {
+                  <span>ชั่วโมงต้องไม่น้อยกว่า 0</span>
+              }
+              @if (socialForm.get('dailyScreenTime')?.hasError('max')) {
+                  <span>ชั่วโมงต้องไม่เกิน 24 ชั่วโมง/วัน</span>
+              }
+          </div>
+         }
       </div>
       <div class="question-group">
         <div class="question-text">12. ในวันปกติ คุณใช้งานโซเชียลมีเดียทั้งหมดกี่แพลตฟอร์ม? (ให้นับแต่ละแอปเป็น 1 เช่น ถ้าใช้ Facebook, Instagram, TikTok ให้ตอบ 3)</div>
         <input type="number" class="textarea-field" formControlName="social_media_platforms_used" placeholder="กรอกจำนวนชั่วโมง...">
+         @if (socialForm.get('social_media_platforms_used')?.invalid && (socialForm.get('social_media_platforms_used')?.touched || socialForm.get('social_media_platforms_used')?.dirty)) {
+            <div class="error-message">
+              @if (socialForm.get('social_media_platforms_used')?.hasError('min')) {
+                <span>จำนวนแพลตฟอร์มต้องไม่น้อยกว่า 0</span>
+              }
+            </div>
+          }
       </div>
       <div class="question-group">
         <div class="question-text">13. โดยเฉลี่ยแล้ว ในแต่ละวันคุณใช้เวลาเล่น TikTok กี่ชั่วโมง? (สามารถตอบเป็นทศนิยมได้ เช่น 1.5 สำหรับ 1 ชั่วโมงครึ่ง)</div>
         <input type="number" class="textarea-field" formControlName="hours_on_TikTok" placeholder="กรอกจำนวนชั่วโมง...">
+        @if (socialForm.get('hours_on_TikTok')?.invalid && (socialForm.get('hours_on_TikTok')?.touched || socialForm.get('hours_on_TikTok')?.dirty)) {
+            <div class="error-message">
+              @if (socialForm.get('hours_on_TikTok')?.hasError('min')) {
+                <span>ชั่วโมงต้องไม่น้อยกว่า 0</span>
+              }
+              @if (socialForm.get('hours_on_TikTok')?.hasError('max')) {
+                <span>ชั่วโมงต้องไม่เกิน 24 ชั่วโมง/วัน</span>
+              }
+            </div>
+        }
       </div>
       <div class="question-group">
         <div class="question-text">14. โดยเฉลี่ยแล้ว ในแต่ละคืนคุณนอนหลับกี่ชั่วโมง? (สามารถตอบเป็นทศนิยมได้ เช่น 7.5 สำหรับ 7 ชั่วโมงครึ่ง)</div>
         <input type="number" class="textarea-field" formControlName="sleep_hours" placeholder="กรอกจำนวนชั่วโมง...">
+        @if (socialForm.get('sleep_hours')?.invalid && (socialForm.get('sleep_hours')?.touched || socialForm.get('sleep_hours')?.dirty)) {
+          <div class="error-message">
+            @if (socialForm.get('sleep_hours')?.hasError('min')) {
+              <span>ชั่วโมงการนอนต้องไม่น้อยกว่า 0</span>
+            }
+            @if (socialForm.get('sleep_hours')?.hasError('max')) {
+              <span>ชั่วโมงการนอนต้องไม่เกิน 24 ชั่วโมง/วัน</span>
+            }
+          </div>
+        }
       </div>
     } @else if (currentStep === 3) {
       <div class="question-group">
         <div class="question-text">15. โปรดให้คะแนนอารมณ์โดยรวมของคุณในวันนี้ โดย 1 คือ 'แย่ที่สุด' และ 10 คือ 'ยอดเยี่ยมที่สุด'</div>
         <input type="number" class="textarea-field" formControlName="mood_score" placeholder="กรอกจำนวนชั่วโมง...">
+         @if (socialForm.get('mood_score')?.invalid && (socialForm.get('mood_score')?.touched || socialForm.get('mood_score')?.dirty)) {
+            <div class="error-message">
+              @if (socialForm.get('mood_score')?.hasError('min')) {
+                <span>คะแนนต้องไม่น้อยกว่า 1</span>
+              }
+              @if (socialForm.get('mood_score')?.hasError('max')) {
+                <span>คะแนนต้องไม่เกิน 10</span>
+              }
+            </div>
+          }
       </div>
       <div class="question-group">
         <div class="question-text">16. คุณมีความตระหนักรู้และให้ความสำคัญกับปัญหาสิ่งแวดล้อมมากน้อยเพียงใด?</div>
@@ -145,6 +236,13 @@
       <div class="question-group">
         <div class="question-text">19. ในรอบ 1 ปีที่ผ่านมา คุณได้เข้าร่วมการอบรมเพื่อพัฒนาทักษะวิชาชีพกี่ครั้ง?</div>
         <input type="number" class="textarea-field" formControlName="professionalTrainings" placeholder="กรอกจำนวนครั้ง...">
+          @if (socialForm.get('professionalTrainings')?.invalid && (socialForm.get('professionalTrainings')?.touched || socialForm.get('professionalTrainings')?.dirty)) {
+            <div class="error-message">
+              @if (socialForm.get('professionalTrainings')?.hasError('min')) {
+                <span>จำนวนครั้งต้องไม่น้อยกว่า 0</span>
+              }
+            </div>
+          }
       </div>
       <div class="question-group">
         <div class="question-text">20. คุณคิดว่าตัวเองมีความคล่องแคล่วในการเรียนรู้และใช้เทคโนโลยีใหม่ๆ แค่ไหน?</div>

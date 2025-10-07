@@ -39,28 +39,28 @@ export class AssessMentQuestion implements OnInit{
     // 3. กำหนดโครงสร้างของฟอร์มที่นี่
     this.socialForm = new FormGroup({
       // Step 1
-      age: new FormControl(null, [Validators.required]),
+      age: new FormControl(null, [Validators.required, Validators.min(1), Validators.max(200)]),
       gender: new FormControl(null, [Validators.required]), 
-      vacationDays: new FormControl(null, [Validators.required]),
-      monthlySpend: new FormControl(null, [Validators.required]),
+      vacationDays: new FormControl(null, [Validators.required, Validators.min(0), Validators.max(365)]),
+      monthlySpend: new FormControl(null, [Validators.required, Validators.min(0)]),
       onlinePurchases: new FormControl(null, [Validators.required]),
       charityDonations: new FormControl(null, [Validators.required]),
-      weeklyExercise: new FormControl(null, [Validators.required]),
+      weeklyExercise: new FormControl(null, [Validators.required, Validators.min(0), Validators.max(168)]),
       // Step 2
-      portfolioValue: new FormControl(null, [Validators.required]),
+      portfolioValue: new FormControl(null, [Validators.required, Validators.min(0)]),
       healthConsciousness: new FormControl(null, [Validators.required]),
       educationLevel: new FormControl(null, [Validators.required]),
-      dailyScreenTime: new FormControl(null, [Validators.required]),
-      social_media_platforms_used: new FormControl(null, [Validators.required]),
-      hours_on_TikTok: new FormControl(null, [Validators.required]),
-      sleep_hours: new FormControl(null, [Validators.required]),
+      dailyScreenTime: new FormControl(null, [Validators.required, Validators.min(0), Validators.max(24)]),
+      social_media_platforms_used: new FormControl(null, [Validators.required, Validators.min(0)]),
+      hours_on_TikTok: new FormControl(null, [Validators.required, Validators.min(0), Validators.max(24)]),
+      sleep_hours: new FormControl(null, [Validators.required, Validators.min(0), Validators.max(24)]),
       
       // Step 3
-      mood_score: new FormControl(null, [Validators.required]),
+      mood_score: new FormControl(null, [Validators.required, Validators.min(1), Validators.max(10)]),
       environmentalAwareness: new FormControl(null, [Validators.required]),
       socialMediaInfluence: new FormControl(null, [Validators.required]),
       riskTolerance: new FormControl(null, [Validators.required]),
-      professionalTrainings: new FormControl(null, [Validators.required]),
+      professionalTrainings: new FormControl(null, [Validators.required, Validators.min(0)]),
       techSavviness: new FormControl(null, [Validators.required]),
       financialWellness: new FormControl(null, [Validators.required]),
      
@@ -153,6 +153,7 @@ export class AssessMentQuestion implements OnInit{
    private transformFormData(formValue: any): { numeric: number[], categorical: number[] } {
     // --- จัดการข้อมูล Categorical (Gender) ---
     let genderValue: number;
+    const usdToThbRate = 36.5;
     switch (formValue.gender) {
       case 'ชาย':
         genderValue = 0;
@@ -179,8 +180,101 @@ export class AssessMentQuestion implements OnInit{
     // ใช้ .map() เพื่อดึงค่าตามลำดับและแปลงเป็นตัวเลข
     const numericValues = numericFieldOrder.map(key => {
       const value = formValue[key];
-      // แปลงค่าเป็นทศนิยม ถ้าไม่มีค่าให้เป็น 0
-      return parseFloat(value || '0'); 
+      if (key === 'monthlySpend' || key === 'portfolioValue') {
+        return value / usdToThbRate;
+      }
+      if (key === 'healthConsciousness') {
+        // สูตร: NewValue = ((OldValue - OldMin) / (OldMax - OldMin)) * (NewMax - NewMin)
+        // ((value - 1) / (5 - 1)) * (13.4 - 0)
+        const rescaledValue = ((value - 1) / 4) * 13.4;
+        return rescaledValue;
+      }
+      if (key === 'educationLevel') {
+      // สูตร: ((OldValue - OldMin) / (OldMax - OldMin)) * (NewMax - NewMin)
+      // ((value - 1) / (8 - 1)) * (15.3 - 0)
+        const rescaledValue = ((value - 1) / 7) * 15.3;
+        return rescaledValue;
+      }
+      if (key === 'environmentalAwareness') {
+      // สูตร: ((OldValue - OldMin) / (OldMax - OldMin)) * (NewMax - NewMin)
+        // ((value - 1) / (5 - 1)) * (15.4 - 0)
+        const rescaledValue = ((value - 1) / 4) * 15.4;
+        return rescaledValue;
+      }
+      if (key === 'socialMediaInfluence') {
+      // สูตร: ((OldValue - OldMin) / (OldMax - OldMin)) * (NewMax - New-Min)
+      // ((value - 1) / (5 - 1)) * (45 - 0)
+        const rescaledValue = ((value - 1) / 4) * 45;
+        return rescaledValue;
+      }
+      if (key === 'riskTolerance') {
+      // สูตร: ((OldValue - OldMin) / (OldMax - OldMin)) * (NewMax - NewMin)
+      // ((value - 1) / (5 - 1)) * (49 - 0)
+        const rescaledValue = ((value - 1) / 4) * 49;
+        return rescaledValue;
+      }
+      if (key === 'techSavviness') {
+      // สูตร: ((OldValue - OldMin) / (OldMax - OldMin)) * (NewMax - NewMin)
+      // ((value - 1) / (5 - 1)) * (39.1 - 0)
+        const rescaledValue = ((value - 1) / 4) * 39.1;
+        return rescaledValue;
+      }
+      if (key === 'financialWellness') {
+        // สูตร: ((OldValue - OldMin) / (OldMax - OldMin)) * (NewMax - NewMin)
+        // ((value - 1) / (5 - 1)) * (594 - 0)
+        const rescaledValue = ((value - 1) / 4) * 594;
+        return rescaledValue;
+      }
+      if (key === 'lifestyleBalance') {
+      // สูตร: ((OldValue - OldMin) / (OldMax - OldMin)) * (NewMax - NewMin)
+      // ((value - 1) / (5 - 1)) * (60.7 - 0)
+        const rescaledValue = ((value - 1) / 4) * 60.7;
+        return rescaledValue;
+      }
+      if (key === 'entertainmentEngagement') {
+      // สูตร: NewValue = NewMin + (((OldValue - OldMin) / (OldMax - OldMin)) * (NewMax - NewMin))
+      // 0.1 + (((value - 1) / (5 - 1)) * (3.32 - 0.1))
+        const rescaledValue = 0.1 + (((value - 1) / 4) * 3.22);
+        return rescaledValue;
+      }
+      if (key === 'socialResponsibility') {
+      // สูตร: ((OldValue - OldMin) / (OldMax - OldMin)) * (NewMax - NewMin)
+      // ((value - 1) / (5 - 1)) * (18.1 - 0)
+        const rescaledValue = ((value - 1) / 4) * 18.1;
+        return rescaledValue;
+      }
+      if (key === 'workLifeBalance') {
+      // สูตร: ((OldValue - OldMin) / (OldMax - OldMin)) * (NewMax - NewMin)
+      // ((value - 1) / (5 - 1)) * (1.58 - 0)
+        const rescaledValue = ((value - 1) / 4) * 1.58;
+        return rescaledValue;
+      }
+      if (key === 'investmentRiskAppetite') {
+      // สูตร: ((OldValue - OldMin) / (OldMax - OldMin)) * (NewMax - NewMin)
+      // ((value - 1) / (5 - 1)) * (9.07 - 0)
+        const rescaledValue = ((value - 1) / 4) * 9.07;
+        return rescaledValue;
+      }
+      if (key === 'ecoConsciousness') {
+      // สูตร: ((OldValue - OldMin) / (OldMax - OldMin)) * (NewMax - NewMin)
+      // ((value - 1) / (5 - 1)) * (3.25 - 0)
+        const rescaledValue = ((value - 1) / 4) * 3.25;
+        return rescaledValue;
+      }
+      if (key === 'stressManagement') {
+      // สูตร: ((OldValue - OldMin) / (OldMax - OldMin)) * (NewMax - NewMin)
+      // ((value - 1) / (5 - 1)) * (9.89 - 0)
+        const rescaledValue = ((value - 1) / 4) * 9.89;
+        return rescaledValue;
+      }
+      if (key === 'timeManagement') {
+      // สูตร: ((OldValue - OldMin) / (OldMax - OldMin)) * (NewMax - NewMin)
+      // ((value - 1) / (5 - 1)) * (122 - 0)
+        const rescaledValue = ((value - 1) / 4) * 122;
+        return rescaledValue;
+      }
+      // ถ้าเป็น key อื่นๆ ให้คืนค่าเดิม
+      return parseFloat(value || '0');
     });
     const healthRating = parseFloat(formValue.healthConsciousness || '0');
     const exerciseHours = parseFloat(formValue.weeklyExercise || '0');
