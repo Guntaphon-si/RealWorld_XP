@@ -8,8 +8,7 @@ git clone https://github.com/Guntaphon-si/RealWorld_XP.git
 
 # ไปที่โฟลเดอร์ Backend 
 cd RealWorld_XP/Backend
-
-นำไฟล์ .env มาใส่ใน Backend 
+นำไฟล์ .env และ stressLevel_rf.pkl มาใส่ใน Backend 
 
 # สร้างและเปิดใช้งาน virtual environment
 python -m venv venv
