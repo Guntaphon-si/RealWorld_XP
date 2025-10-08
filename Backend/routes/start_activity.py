@@ -57,7 +57,7 @@ def complete_activity(user_id: int, request: ActivityCompletionRequest, db: Sess
 
     now = datetime.now()
 
-    if not user.is_success and user.first_success.date() != user.login_time:
+    if not user.is_success and (user.first_success is None or user.first_success.date() != user.login_time):
         user.first_success = now      
         user.day_streak += 1        
         user.is_success = 1 
