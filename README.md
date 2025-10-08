@@ -1,7 +1,4 @@
-# RealWorld XP  Gamify Habits, Level Up Your Life.
 # การติดตั้งและเริ่มใช้งาน (Getting Started)
-
-ทำตามขั้นตอนต่อไปนี้เพื่อรันโปรเจกต์บนเครื่องของคุณ
 
 ### 1. Backend (FastAPI)
 
