@@ -6,8 +6,10 @@
 # Clone a repository
 git clone https://github.com/Guntaphon-si/RealWorld_XP.git
 
-# ไปที่โฟลเดอร์ backend 
+# ไปที่โฟลเดอร์ Backend 
 cd RealWorld_XP/Backend
+
+นำไฟล์ .env มาใส่ใน Backend 
 
 # สร้างและเปิดใช้งาน virtual environment
 python -m venv venv
@@ -35,3 +37,5 @@ ng serve
 แอปพลิเคชัน Frontend จะทำงานที่ `http://localhost:4200/`
 
 ---
+
+
