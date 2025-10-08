@@ -12,8 +12,8 @@ cd RealWorld_XP/Backend
 
 # สร้างและเปิดใช้งาน virtual environment
 python -m venv venv
+venv\Scripts\activate    # สำหรับ Windows(ไม่ต้องใช้sourceนำหน้า)
 source venv/bin/activate  # สำหรับ macOS/Linux
-venv\Scripts\activate    # สำหรับ Windows
 
 # ติดตั้ง dependencies
 pip install -r requirements.txt
